@@ -14,7 +14,7 @@ create table public.legal_document_versions (
   exact_text text not null,
   text_sha256 text not null check (
     text_sha256 ~ '^[a-f0-9]{64}$'
-    and text_sha256 = encode(digest(exact_text, 'sha256'), 'hex')
+    and text_sha256 = encode(extensions.digest(exact_text, 'sha256'), 'hex')
   ),
   effective_at timestamptz not null,
   is_active boolean not null default false,
@@ -38,7 +38,7 @@ with documents(document_kind, version, exact_text, effective_at) as (values
    '2026-08-24T00:00:00Z'::timestamptz)
 )
 insert into public.legal_document_versions (document_kind, version, exact_text, text_sha256, effective_at, is_active)
-select document_kind, version, exact_text, encode(digest(exact_text, 'sha256'), 'hex'), effective_at, true
+select document_kind, version, exact_text, encode(extensions.digest(exact_text, 'sha256'), 'hex'), effective_at, true
 from documents;
 
 create table public.registrations (
@@ -120,7 +120,7 @@ create table public.registration_sensitive_details (
   consent_text_snapshot text not null,
   consent_text_sha256 text not null check (
     consent_text_sha256 ~ '^[a-f0-9]{64}$'
-    and consent_text_sha256 = encode(digest(consent_text_snapshot, 'sha256'), 'hex')
+    and consent_text_sha256 = encode(extensions.digest(consent_text_snapshot, 'sha256'), 'hex')
   ),
   created_at timestamptz not null default now()
 );
@@ -137,13 +137,13 @@ create table public.registration_consents (
   text_snapshot text not null,
   text_sha256 text not null check (
     text_sha256 ~ '^[a-f0-9]{64}$'
-    and text_sha256 = encode(digest(text_snapshot, 'sha256'), 'hex')
+    and text_sha256 = encode(extensions.digest(text_snapshot, 'sha256'), 'hex')
   ),
   privacy_notice_version text not null,
   privacy_notice_text_snapshot text not null,
   privacy_notice_text_sha256 text not null check (
     privacy_notice_text_sha256 ~ '^[a-f0-9]{64}$'
-    and privacy_notice_text_sha256 = encode(digest(privacy_notice_text_snapshot, 'sha256'), 'hex')
+    and privacy_notice_text_sha256 = encode(extensions.digest(privacy_notice_text_snapshot, 'sha256'), 'hex')
   ),
   created_at timestamptz not null default now(),
   unique (registration_id, consent_kind),
@@ -413,7 +413,7 @@ begin
   v_privacy_text := nullif(v_privacy ->> 'text_snapshot', '');
   v_privacy_hash := nullif(v_privacy ->> 'text_sha256', '');
   if v_privacy_version is null or v_privacy_text is null or v_privacy_hash is null
-     or v_privacy_hash <> encode(digest(v_privacy_text, 'sha256'), 'hex') then
+     or v_privacy_hash <> encode(extensions.digest(v_privacy_text, 'sha256'), 'hex') then
     raise exception using errcode = '23514', message = 'privacy_notice_snapshot_invalid';
   end if;
 
@@ -438,7 +438,7 @@ begin
 
     if v_accepted is null or v_document_version is null or v_consent_text is null
        or v_consent_hash is null
-       or v_consent_hash <> encode(digest(v_consent_text, 'sha256'), 'hex') then
+       or v_consent_hash <> encode(extensions.digest(v_consent_text, 'sha256'), 'hex') then
       raise exception using errcode = '23514', message = 'consent_snapshot_invalid';
     end if;
 
@@ -501,7 +501,7 @@ begin
       v_sensitive_consent_hash := nullif(p_sensitive ->> 'consent_text_sha256', '');
       if v_sensitive_version is null or v_sensitive_consent_text is null
          or v_sensitive_consent_hash is null
-         or v_sensitive_consent_hash <> encode(digest(v_sensitive_consent_text, 'sha256'), 'hex') then
+         or v_sensitive_consent_hash <> encode(extensions.digest(v_sensitive_consent_text, 'sha256'), 'hex') then
         raise exception using errcode = '23514', message = 'support_consent_invalid';
       end if;
       perform 1

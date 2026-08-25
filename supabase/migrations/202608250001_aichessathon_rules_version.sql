@@ -25,7 +25,7 @@ select
   document_kind,
   version,
   exact_text,
-  encode(digest(exact_text, 'sha256'), 'hex'),
+  encode(extensions.digest(exact_text, 'sha256'), 'hex'),
   effective_at,
   true
 from rules_version;
