@@ -1,0 +1,1 @@
+-- No development registration fixtures are seeded by default.
