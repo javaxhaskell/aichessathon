@@ -11,7 +11,7 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://aichessathon.com"),
-  title: { default: "AI Chessathon — Build an agent. Put it on the board.", template: "%s | AI Chessathon" },
+  title: { default: "AI Chessathon: Build an agent. Put it on the board.", template: "%s | AI Chessathon" },
   description:
     `An AI chess engineering competition with online qualification from ${QUALIFICATION_DATES} and an in-person London final on ${FINAL_DATE}.`,
   alternates: { canonical: "/" },
@@ -24,13 +24,13 @@ export const metadata: Metadata = {
     locale: "en_GB",
     url: "/",
     siteName: "AI Chessathon",
-    title: "AI Chessathon — Build an agent. Put it on the board.",
+    title: "AI Chessathon: Build an agent. Put it on the board.",
     description: `Online qualification ${QUALIFICATION_DATES}. London final ${FINAL_DATE}. Sponsored by Optiver.`,
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "AI Chessathon — autonomous agents competing on the board" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "AI Chessathon, autonomous agents competing on the board" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Chessathon — Build an agent. Put it on the board.",
+    title: "AI Chessathon: Build an agent. Put it on the board.",
     description: `Online qualification ${QUALIFICATION_DATES}. London final ${FINAL_DATE}. Sponsored by Optiver.`,
     images: ["/opengraph-image"],
   },

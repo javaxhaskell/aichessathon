@@ -1,11 +1,27 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { QUALIFICATION_DATES_SHORT } from "@/lib/event";
 
-type Frame = { fen: string; move: string; from: string; to: string; evaluation: number };
+type Side = "white" | "black";
+type Piece = { token: string; black: boolean };
+type OpeningMove = { move: string; from: string; to: string; evaluation: number };
+type Frame = {
+  move: string;
+  from: string | null;
+  to: string | null;
+  evaluation: number;
+  pieces: Map<string, Piece>;
+  activeSide: Side;
+};
+type Playback = {
+  frameIndex: number;
+  whiteClock: number;
+  blackClock: number;
+  status: "waiting" | "playing" | "complete";
+};
 type Match = {
   board: string;
   white: string;
@@ -16,38 +32,8 @@ type Match = {
   frames: Frame[];
 };
 
-const matches: Match[] = [
-  {
-    board: "Board 01", white: "Agent 04", black: "Agent 17", whiteClock: 521, blackClock: 476, offset: 0,
-    frames: [
-      { fen: "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQR1K1 b - - 2 7", move: "7. Re1", from: "f1", to: "e1", evaluation: 0.3 },
-      { fen: "r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQR1K1 w - - 0 8", move: "7…a6", from: "a7", to: "a6", evaluation: 0.4 },
-      { fen: "r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/4P3/1BPP1N2/PP3PPP/RNBQR1K1 b - - 1 8", move: "8. Bb3", from: "c4", to: "b3", evaluation: 0.3 },
-      { fen: "r1bq1rk1/bpp2ppp/p1np1n2/4p3/4P3/1BPP1N2/PP3PPP/RNBQR1K1 w - - 2 9", move: "8…Ba7", from: "c5", to: "a7", evaluation: 0.4 },
-    ],
-  },
-  {
-    board: "Board 02", white: "Agent 12", black: "Agent 09", whiteClock: 378, blackClock: 392, offset: 920,
-    frames: [
-      { fen: "rnbq1rk1/pp2bppp/4pn2/2Pp4/2P2B2/2N1PN2/PP3PPP/R2QKB1R b KQ - 0 7", move: "7. dxc5", from: "d4", to: "c5", evaluation: 0.3 },
-      { fen: "rnbq1rk1/pp3ppp/4pn2/2bp4/2P2B2/2N1PN2/PP3PPP/R2QKB1R w KQ - 0 8", move: "7…Bxc5", from: "e7", to: "c5", evaluation: 0.2 },
-      { fen: "rnbq1rk1/pp3ppp/4pn2/2bp4/2P2B2/2N1PN2/PPQ2PPP/R3KB1R b KQ - 1 8", move: "8. Qc2", from: "d1", to: "c2", evaluation: 0.3 },
-      { fen: "r1bq1rk1/pp3ppp/2n1pn2/2bp4/2P2B2/2N1PN2/PPQ2PPP/R3KB1R w KQ - 2 9", move: "8…Nc6", from: "b8", to: "c6", evaluation: 0.1 },
-    ],
-  },
-  {
-    board: "Board 03", white: "Agent 21", black: "Agent 02", whiteClock: 542, blackClock: 527, offset: 1740,
-    frames: [
-      { fen: "rnbqkb1r/1p2pppp/p2p1n2/8/3NP3/2N1B3/PPP2PPP/R2QKB1R b KQkq - 1 6", move: "6. Be3", from: "c1", to: "e3", evaluation: 0.1 },
-      { fen: "rnbqkb1r/1p3ppp/p2p1n2/4p3/3NP3/2N1B3/PPP2PPP/R2QKB1R w KQkq e6 0 7", move: "6…e5", from: "e7", to: "e5", evaluation: 0.0 },
-      { fen: "rnbqkb1r/1p3ppp/p2p1n2/4p3/4P3/1NN1B3/PPP2PPP/R2QKB1R b KQkq - 1 7", move: "7. Nb3", from: "d4", to: "b3", evaluation: 0.2 },
-      { fen: "rn1qkb1r/1p3ppp/p2pbn2/4p3/4P3/1NN1B3/PPP2PPP/R2QKB1R w KQkq - 2 8", move: "7…Be6", from: "c8", to: "e6", evaluation: 0.1 },
-    ],
-  },
-];
-
 function parseFen(fen: string) {
-  const squares: Array<{ square: string; token: string; black: boolean }> = [];
+  const squares: Array<{ square: string } & Piece> = [];
   const rows = fen.split(" ")[0].split("/");
   rows.forEach((row, rankIndex) => {
     let fileIndex = 0;
@@ -57,8 +43,95 @@ function parseFen(fen: string) {
       fileIndex += 1;
     }
   });
-  return new Map(squares.map((square) => [square.square, square]));
+  return new Map(squares.map(({ square, token, black }) => [square, { token, black }]));
 }
+
+const STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+function buildFrames(moves: OpeningMove[]): Frame[] {
+  const position = parseFen(STARTING_FEN);
+  const frames: Frame[] = [{
+    move: "Start position",
+    from: null,
+    to: null,
+    evaluation: 0,
+    pieces: new Map(position),
+    activeSide: "white",
+  }];
+
+  moves.forEach((move, index) => {
+    const piece = position.get(move.from);
+    const movingSide: Side = index % 2 === 0 ? "white" : "black";
+    if (!piece || piece.black !== (movingSide === "black")) {
+      throw new Error(`Invalid opening move ${move.move} on ${move.from}`);
+    }
+    position.delete(move.from);
+    position.set(move.to, piece);
+    frames.push({
+      ...move,
+      pieces: new Map(position),
+      activeSide: movingSide === "white" ? "black" : "white",
+    });
+  });
+
+  return frames;
+}
+
+const matches: Match[] = [
+  {
+    board: "Board 01", white: "Agent 04", black: "Agent 17", whiteClock: 600, blackClock: 600, offset: 0,
+    frames: buildFrames([
+      { move: "1. e4", from: "e2", to: "e4", evaluation: 0.20 },
+      { move: "1… e5", from: "e7", to: "e5", evaluation: 0.15 },
+      { move: "2. Nf3", from: "g1", to: "f3", evaluation: 0.22 },
+      { move: "2… Nc6", from: "b8", to: "c6", evaluation: 0.16 },
+      { move: "3. Bc4", from: "f1", to: "c4", evaluation: 0.24 },
+      { move: "3… Nf6", from: "g8", to: "f6", evaluation: 0.18 },
+      { move: "4. d3", from: "d2", to: "d3", evaluation: 0.16 },
+      { move: "4… Bc5", from: "f8", to: "c5", evaluation: 0.12 },
+      { move: "5. c3", from: "c2", to: "c3", evaluation: 0.18 },
+      { move: "5… d6", from: "d7", to: "d6", evaluation: 0.14 },
+      { move: "6. Nbd2", from: "b1", to: "d2", evaluation: 0.17 },
+      { move: "6… a6", from: "a7", to: "a6", evaluation: 0.20 },
+    ]),
+  },
+  {
+    board: "Board 02", white: "Agent 12", black: "Agent 09", whiteClock: 600, blackClock: 600, offset: 620,
+    frames: buildFrames([
+      { move: "1. d4", from: "d2", to: "d4", evaluation: 0.20 },
+      { move: "1… d5", from: "d7", to: "d5", evaluation: 0.16 },
+      { move: "2. c4", from: "c2", to: "c4", evaluation: 0.28 },
+      { move: "2… e6", from: "e7", to: "e6", evaluation: 0.20 },
+      { move: "3. Nc3", from: "b1", to: "c3", evaluation: 0.27 },
+      { move: "3… Nf6", from: "g8", to: "f6", evaluation: 0.22 },
+      { move: "4. Nf3", from: "g1", to: "f3", evaluation: 0.26 },
+      { move: "4… Be7", from: "f8", to: "e7", evaluation: 0.22 },
+      { move: "5. Bg5", from: "c1", to: "g5", evaluation: 0.30 },
+      { move: "5… h6", from: "h7", to: "h6", evaluation: 0.28 },
+      { move: "6. Bh4", from: "g5", to: "h4", evaluation: 0.31 },
+      { move: "6… b6", from: "b7", to: "b6", evaluation: 0.34 },
+    ]),
+  },
+  {
+    board: "Board 03", white: "Agent 21", black: "Agent 02", whiteClock: 600, blackClock: 600, offset: 1240,
+    frames: buildFrames([
+      { move: "1. e4", from: "e2", to: "e4", evaluation: 0.20 },
+      { move: "1… e5", from: "e7", to: "e5", evaluation: 0.15 },
+      { move: "2. Nf3", from: "g1", to: "f3", evaluation: 0.22 },
+      { move: "2… Nc6", from: "b8", to: "c6", evaluation: 0.16 },
+      { move: "3. d4", from: "d2", to: "d4", evaluation: 0.28 },
+      { move: "3… exd4", from: "e5", to: "d4", evaluation: 0.22 },
+      { move: "4. Nxd4", from: "f3", to: "d4", evaluation: 0.30 },
+      { move: "4… Nf6", from: "g8", to: "f6", evaluation: 0.23 },
+      { move: "5. Nxc6", from: "d4", to: "c6", evaluation: 0.18 },
+      { move: "5… bxc6", from: "b7", to: "c6", evaluation: 0.26 },
+      { move: "6. Bd3", from: "f1", to: "d3", evaluation: 0.28 },
+      { move: "6… d5", from: "d7", to: "d5", evaluation: 0.20 },
+      { move: "7. exd5", from: "e4", to: "d5", evaluation: 0.24 },
+      { move: "7… cxd5", from: "c6", to: "d5", evaluation: 0.18 },
+    ]),
+  },
+];
 
 type PieceMotionStyle = CSSProperties & { "--move-x": string; "--move-y": string };
 
@@ -248,10 +321,6 @@ function moveOffset(from: string, to: string): PieceMotionStyle {
   };
 }
 
-function sideToMove(fen: string) {
-  return fen.split(/\s+/)[1] === "b" ? "black" : "white";
-}
-
 function formatClock(seconds: number) {
   const bounded = Math.max(0, seconds);
   return `${String(Math.floor(bounded / 60)).padStart(2, "0")}:${String(bounded % 60).padStart(2, "0")}`;
@@ -260,10 +329,12 @@ function formatClock(seconds: number) {
 function MatchCard({ match, index }: { match: Match; index: number }) {
   const cardRef = useRef<HTMLElement>(null);
   const visibleRef = useRef(false);
-  const [playback, setPlayback] = useState({
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [playback, setPlayback] = useState<Playback>({
     frameIndex: 0,
     whiteClock: match.whiteClock,
     blackClock: match.blackClock,
+    status: "waiting",
   });
 
   useEffect(() => {
@@ -286,86 +357,98 @@ function MatchCard({ match, index }: { match: Match; index: number }) {
 
   useEffect(() => {
     const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let moveStart: number | undefined;
-    let moveTimer: number | undefined;
-    let clockTimer: number | undefined;
-
-    const clearTimers = () => {
-      if (moveStart !== undefined) window.clearTimeout(moveStart);
-      if (moveTimer !== undefined) window.clearInterval(moveTimer);
-      if (clockTimer !== undefined) window.clearInterval(clockTimer);
-      moveStart = undefined;
-      moveTimer = undefined;
-      clockTimer = undefined;
-    };
-
-    const canAdvance = () => visibleRef.current && !document.hidden;
-    const startTimers = () => {
-      clearTimers();
-      if (motionPreference.matches) return;
-
-      clockTimer = window.setInterval(() => {
-        if (!canAdvance()) return;
-        setPlayback((current) => {
-          const activeSide = sideToMove(match.frames[current.frameIndex].fen);
-          return activeSide === "white"
-            ? { ...current, whiteClock: Math.max(0, current.whiteClock - 1) }
-            : { ...current, blackClock: Math.max(0, current.blackClock - 1) };
-        });
-      }, 1000);
-
-      moveStart = window.setTimeout(() => {
-        moveTimer = window.setInterval(() => {
-          if (!canAdvance()) return;
-          setPlayback((current) => ({
-            ...current,
-            frameIndex: (current.frameIndex + 1) % match.frames.length,
-          }));
-        }, 2600);
-      }, match.offset);
-    };
-
-    startTimers();
-    motionPreference.addEventListener("change", startTimers);
+    const updatePreference = () => setReducedMotion(motionPreference.matches);
+    updatePreference();
+    motionPreference.addEventListener("change", updatePreference);
     return () => {
-      motionPreference.removeEventListener("change", startTimers);
-      clearTimers();
+      motionPreference.removeEventListener("change", updatePreference);
     };
-  }, [match]);
+  }, []);
 
-  const frame = match.frames[playback.frameIndex];
-  const pieces = useMemo(() => parseFen(frame.fen), [frame.fen]);
-  const activeSide = sideToMove(frame.fen);
+  useEffect(() => {
+    if (reducedMotion) return;
+    if (playback.status === "complete") return;
+
+    let cancelled = false;
+    let moveTimer: number | undefined;
+    const firstMove = playback.frameIndex === 0;
+    const scheduleMove = (delay: number) => {
+      moveTimer = window.setTimeout(() => {
+        if (cancelled) return;
+        if (!visibleRef.current || document.hidden) {
+          scheduleMove(250);
+          return;
+        }
+        setPlayback((current) => {
+          const nextFrame = Math.min(current.frameIndex + 1, match.frames.length - 1);
+          return {
+            ...current,
+            frameIndex: nextFrame,
+            status: nextFrame === match.frames.length - 1 ? "complete" : "playing",
+          };
+        });
+      }, delay);
+    };
+
+    scheduleMove(firstMove ? 1700 + match.offset : 1900);
+    return () => {
+      cancelled = true;
+      if (moveTimer !== undefined) window.clearTimeout(moveTimer);
+    };
+  }, [match, playback.frameIndex, playback.status, reducedMotion]);
+
+  useEffect(() => {
+    if (reducedMotion || playback.status !== "playing") return;
+    const clockTimer = window.setInterval(() => {
+      if (!visibleRef.current || document.hidden) return;
+      setPlayback((current) => {
+        if (current.status !== "playing") return current;
+        const activeSide = match.frames[current.frameIndex].activeSide;
+        return activeSide === "white"
+          ? { ...current, whiteClock: Math.max(0, current.whiteClock - 1) }
+          : { ...current, blackClock: Math.max(0, current.blackClock - 1) };
+      });
+    }, 1000);
+    return () => window.clearInterval(clockTimer);
+  }, [match, playback.status, reducedMotion]);
+
+  const frameIndex = reducedMotion ? match.frames.length - 1 : playback.frameIndex;
+  const frame = match.frames[frameIndex];
+  const pieces = frame.pieces;
+  const activeSide = frame.activeSide;
+  const clockIsRunning = !reducedMotion && playback.status === "playing";
   const evaluationHeight = Math.max(12, Math.min(88, 50 + frame.evaluation * 17));
 
   return (
     <article className="match-card" data-reveal ref={cardRef}>
-      <p className="sr-only">{match.board}: {match.white} versus {match.black}. Current move {frame.move}.</p>
+      <p className="sr-only">{match.board}: {match.white} versus {match.black}. {frame.from ? `Current move ${frame.move}.` : "Starting position."}</p>
       <div aria-hidden="true">
-        <div className="match-topline"><span>{match.board}</span><span>QF · Sim</span></div>
+        <div className="match-topline"><span>{match.board}</span><span>Opening</span></div>
         <div className="agent-row agent-row-top">
           <span className="agent-identity"><i className="agent-chip dark" />{match.black}</span>
-          <time className={`clock${activeSide === "black" ? " active" : ""}`} dateTime={`PT${playback.blackClock}S`}>{formatClock(playback.blackClock)}</time>
+          <time className={`clock${clockIsRunning && activeSide === "black" ? " active" : ""}`} dateTime={`PT${playback.blackClock}S`}>{formatClock(playback.blackClock)}</time>
         </div>
         <div className="board-shell">
-          <div className={`chess-board${playback.frameIndex === 0 ? " resetting" : ""}`}>
+          <div className="chess-board">
             {Array.from({ length: 64 }, (_, squareIndex) => {
               const file = squareIndex % 8;
               const rank = 8 - Math.floor(squareIndex / 8);
               const square = `${"abcdefgh"[file]}${rank}`;
               const piece = pieces.get(square);
               const isDark = (file + rank) % 2 === 0;
-              const isFrom = square === frame.from;
-              const isTo = square === frame.to;
+              const isFrom = Boolean(frame.from && square === frame.from);
+              const isTo = Boolean(frame.to && square === frame.to);
+              const moving = Boolean(isTo && frame.from && frame.to);
+              const motionStyle = isTo && frame.from && frame.to ? moveOffset(frame.from, frame.to) : undefined;
               return (
                 <span className={`board-square${isDark ? " dark" : ""}${isFrom ? " move-from" : ""}${isTo ? " move-to" : ""}`} key={`${index}-${square}`}>
                   {file === 0 ? <small className="board-coordinate rank-coordinate">{rank}</small> : null}
                   {rank === 1 ? <small className="board-coordinate file-coordinate">{"abcdefgh"[file]}</small> : null}
                   {piece ? (
                     <ChessPiece
-                      key={`${square}-${piece.token}-${isTo ? playback.frameIndex : "still"}`}
-                      moving={isTo && playback.frameIndex > 0}
-                      style={isTo && playback.frameIndex > 0 ? moveOffset(frame.from, frame.to) : undefined}
+                      key={`${square}-${piece.token}-${isTo ? frameIndex : "still"}`}
+                      moving={moving}
+                      style={motionStyle}
                       token={piece.token}
                     />
                   ) : null}
@@ -377,7 +460,7 @@ function MatchCard({ match, index }: { match: Match; index: number }) {
         </div>
         <div className="agent-row agent-row-bottom">
           <span className="agent-identity"><i className="agent-chip" />{match.white}</span>
-          <time className={`clock${activeSide === "white" ? " active" : ""}`} dateTime={`PT${playback.whiteClock}S`}>{formatClock(playback.whiteClock)}</time>
+          <time className={`clock${clockIsRunning && activeSide === "white" ? " active" : ""}`} dateTime={`PT${playback.whiteClock}S`}>{formatClock(playback.whiteClock)}</time>
         </div>
         <div className="match-foot"><span className="move-notation">{frame.move}</span><span className="eval-value">Eval {frame.evaluation > 0 ? "+" : ""}{frame.evaluation.toFixed(1)}</span></div>
       </div>
@@ -388,7 +471,7 @@ function MatchCard({ match, index }: { match: Match; index: number }) {
 export function TournamentStage() {
   return (
     <section className="tournament-stage" aria-labelledby="simulation-title">
-      <div className="stage-head"><h2 className="stage-label" id="simulation-title">Agent match simulation</h2><p className="stage-meta">Qualification · {QUALIFICATION_DATES_SHORT} · 3 boards</p></div>
+      <div className="stage-head"><h2 className="stage-label" id="simulation-title">Match simulation</h2><p className="stage-meta">Qualification · {QUALIFICATION_DATES_SHORT} · 3 boards</p></div>
       <div className="matches-grid">{matches.map((match, index) => <MatchCard index={index} key={match.board} match={match} />)}</div>
     </section>
   );

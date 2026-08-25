@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 import { FINAL_DATE, QUALIFICATION_DATES } from "@/lib/event";
 
-export const alt = "AI Chessathon — Build an agent. Put it on the board.";
+export const alt = "AI Chessathon: Build an agent. Put it on the board.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
