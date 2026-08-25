@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { MAX_CV_BYTES, registrationSchema } from "./registration";
+import { QUALIFICATION_DATES } from "./event";
+import { MAX_CV_BYTES, RULES_VERSION, registrationSchema } from "./registration";
 
 const base = {
   idempotencyKey: "7ad06b17-02b0-47d7-ab26-6b3bd936d9b8",
@@ -82,5 +83,12 @@ describe("registrationSchema", () => {
       availabilityLondon: false,
     });
     expect(parsed.success).toBe(false);
+  });
+});
+
+describe("published event gates", () => {
+  it("uses the confirmed qualifier dates and matching rules version", () => {
+    expect(QUALIFICATION_DATES).toBe("7–11 September 2026");
+    expect(RULES_VERSION).toBe("2026-08-25.v1");
   });
 });

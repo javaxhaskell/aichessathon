@@ -1,6 +1,6 @@
 # AI Chessathon
 
-Public website and registration MVP for [AI Chessathon](https://aichessathon.com): a five-day online AI chess qualification followed by an in-person London final on 12 September 2026. Sponsored by Optiver.
+Public website and registration MVP for [AI Chessathon](https://aichessathon.com): a five-day online AI chess qualification from 7–11 September 2026 followed by an in-person London final on 12 September 2026. Sponsored by Optiver.
 
 ## Included
 
@@ -57,7 +57,7 @@ Production currently remains closed until these steps are completed.
    ```
 
 3. In Supabase project settings, copy the project URL, publishable key, and server-only secret key. Add every required value below to the Vercel project's Production environment and redeploy.
-4. Replace the privacy notice's organising-team placeholder with the actual legal controller name, review the privacy/rules text, then set `REGISTRATION_LEGAL_CONTROLLER_NAME` and the exact approved version `REGISTRATION_RULES_APPROVED=2026-08-24.v1`.
+4. Replace the privacy notice's organising-team placeholder with the actual legal controller name, review the privacy/rules text, then set `REGISTRATION_LEGAL_CONTROLLER_NAME` and the exact approved version `REGISTRATION_RULES_APPROVED=2026-08-25.v1`.
 5. Confirm the `registration-cvs` bucket is private, limited to `application/pdf`, and capped at 10,485,760 bytes. The migration creates this configuration.
 6. Run Supabase's Database and Security advisors. Anonymous/authenticated clients should be unable to read or write registration tables or download/list CV objects.
 
@@ -69,7 +69,7 @@ Required variables:
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Browser-safe project key used only with signed upload tokens |
 | `SUPABASE_SECRET_KEY` | Server-only key; legacy `SUPABASE_SERVICE_ROLE_KEY` is also supported |
 | `REGISTRATION_LEGAL_CONTROLLER_NAME` | Legal identity shown in the privacy notice |
-| `REGISTRATION_RULES_APPROVED` | Must equal `2026-08-24.v1` |
+| `REGISTRATION_RULES_APPROVED` | Must equal `2026-08-25.v1` |
 | `RATE_LIMIT_HMAC_SECRET` | Long random value used to rate-limit without storing raw IPs |
 | `CRON_SECRET` | Long random value securing Vercel's daily upload-cleanup request |
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cloneElement, FormEvent, type ReactElement, useRef, useState } from "react";
 
+import { FINAL_DATE, QUALIFICATION_DATES } from "@/lib/event";
 import { MAX_CV_BYTES, type StartRegistrationResponse } from "@/lib/registration";
 
 type Teammate = { key: number; fullName: string; email: string };
@@ -267,8 +268,8 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
         <section className="form-section" aria-labelledby="confirm-heading">
           <div className="form-section-heading"><span>05</span><div><h2 id="confirm-heading">Availability and agreements</h2><p>Please confirm each item before submitting.</p></div></div>
           <div className="check-list">
-            <Check name="availabilityOnline" error={errorFor("availabilityOnline")}>I confirm that I am available in principle for the five-day online qualification phase and understand that I will confirm again when the exact dates are announced.</Check>
-            <Check name="availabilityLondon" error={errorFor("availabilityLondon")}>I confirm that I can attend the London final on 12 September 2026 if selected.</Check>
+            <Check name="availabilityOnline" error={errorFor("availabilityOnline")}>I confirm that I am available for the five-day online qualification from {QUALIFICATION_DATES}.</Check>
+            <Check name="availabilityLondon" error={errorFor("availabilityLondon")}>I confirm that I can attend the London final on {FINAL_DATE} if selected.</Check>
             <Check name="rulesAccepted" error={errorFor("rulesAccepted")}>I agree to comply with the <Link href="/terms" target="_blank">competition rules and code of conduct</Link>.</Check>
             <Check name="privacyAccepted" error={errorFor("privacyAccepted")}>I have read and accept the <Link href="/privacy" target="_blank">privacy notice</Link>.</Check>
           </div>
@@ -285,10 +286,10 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
       <aside className="registration-aside">
         <p className="status-kicker">Event brief</p>
         <h2>AI Chessathon</h2>
-        <p>Build an autonomous chess agent, qualify online, and compete against the finalists in London.</p>
+        <p>Build an autonomous chess agent, qualify online, and compete in the London final.</p>
         <dl>
-          <div><dt>Online phase</dt><dd>Five days<br /><span>Dates to be announced</span></dd></div>
-          <div><dt>London final</dt><dd>12 September 2026</dd></div>
+          <div><dt>Online phase</dt><dd>{QUALIFICATION_DATES}<br /><span>Five days · Online</span></dd></div>
+          <div><dt>London final</dt><dd>{FINAL_DATE}</dd></div>
           <div><dt>Sponsor</dt><dd>Optiver</dd></div>
         </dl>
         <div className="aside-note"><span aria-hidden="true">i</span><p>Your CV is optional and stored privately. It is shared with Optiver only if you actively select the separate consent box.</p></div>

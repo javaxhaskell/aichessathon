@@ -1,11 +1,13 @@
 import { z } from "zod";
 
+import { QUALIFICATION_DATES } from "./event";
+
 export const SITE_URL = "https://aichessathon.com";
 export const CONTACT_EMAIL = "events@aichessathon.com";
 export const CV_BUCKET = "registration-cvs";
 export const MAX_CV_BYTES = 10 * 1024 * 1024;
 export const PRIVACY_NOTICE_VERSION = "2026-08-24.v1";
-export const RULES_VERSION = "2026-08-24.v1";
+export const RULES_VERSION = "2026-08-25.v1";
 export const CV_CONSENT_VERSION = "2026-08-24.v1";
 export const ACCESSIBILITY_CONSENT_VERSION = "2026-08-24.v1";
 
@@ -57,7 +59,7 @@ export const registrationSchema = z.object({
   teamStatus: z.enum(["looking_for_team", "has_team"]),
   teamName: optionalText(120),
   teammates: z.array(teammateSchema).max(8),
-  availabilityOnline: z.literal(true, { error: "Confirm your availability in principle for the online phase." }),
+  availabilityOnline: z.literal(true, { error: `Confirm your availability for the online qualification, ${QUALIFICATION_DATES}.` }),
   availabilityLondon: z.literal(true, { error: "Confirm your availability for the London final." }),
   rulesAccepted: z.literal(true, { error: "Accept the competition rules and code of conduct." }),
   privacyAccepted: z.literal(true, { error: "Accept the privacy notice." }),

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { verifyConfirmationReceipt } from "@/lib/confirmation-receipt";
+import { FINAL_DATE, QUALIFICATION_DATES } from "@/lib/event";
 import { CONTACT_EMAIL } from "@/lib/registration";
 
 export const metadata: Metadata = {
@@ -25,7 +26,7 @@ export default async function ConfirmationPage({ searchParams }: { searchParams:
           <span className="confirmation-mark" aria-hidden="true">✓</span>
           <p className="eyebrow">Registration complete</p>
           <h1>Registration received.</h1>
-          <p>Thank you for registering for AI Chessathon. We will be in touch with qualification dates and participant information.</p>
+          <p>Thank you for registering for AI Chessathon. The online qualification runs from {QUALIFICATION_DATES}, followed by the London final on {FINAL_DATE}. We will be in touch with participant information.</p>
           <div className="reference-block"><span>Your reference</span><strong>{confirmation.reference}</strong></div>
           {confirmation.emailStatus === "sent" ? (
             <p className="confirmation-email">A confirmation has been sent to your email address.</p>

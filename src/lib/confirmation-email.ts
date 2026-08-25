@@ -1,5 +1,6 @@
 import "server-only";
 
+import { FINAL_DATE, QUALIFICATION_DATES } from "@/lib/event";
 import { CONTACT_EMAIL, SITE_URL } from "@/lib/registration";
 
 export type EmailStatus = "sent" | "not_configured" | "failed";
@@ -21,8 +22,8 @@ export async function sendConfirmationEmail(input: {
     "Your AI Chessathon registration has been received.",
     `Reference: ${input.reference}`,
     "",
-    "The competition begins with a five-day online qualification phase, followed by the London final on 12 September 2026.",
-    "We will contact you with qualification dates and participant information when they are confirmed.",
+    `The competition begins with a five-day online qualification phase from ${QUALIFICATION_DATES}, followed by the London final on ${FINAL_DATE}.`,
+    "We will contact you with participant information and the remaining competition details.",
     "",
     `Competition rules: ${SITE_URL}/terms`,
     `Privacy notice: ${SITE_URL}/privacy`,

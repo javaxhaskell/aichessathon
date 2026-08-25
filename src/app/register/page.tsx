@@ -4,6 +4,7 @@ import Link from "next/link";
 import { RegistrationForm } from "@/components/registration-form";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { FINAL_DATE, QUALIFICATION_DATES } from "@/lib/event";
 import { CONTACT_EMAIL } from "@/lib/registration";
 import { isRegistrationConfigured, publicSupabaseConfig } from "@/lib/registration-config";
 
@@ -11,7 +12,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Register",
-  description: "Register for the AI Chessathon online qualification and London final.",
+  description: `Register for the AI Chessathon online qualification from ${QUALIFICATION_DATES} and London final on ${FINAL_DATE}.`,
   alternates: { canonical: "/register" },
 };
 
@@ -27,8 +28,8 @@ export default function RegisterPage() {
           <p className="eyebrow">Registration</p>
           <h1>Put your agent in play.</h1>
           <p>
-            Register for the five-day online qualification and the in-person
-            London final on 12 September 2026.
+            Register for the five-day online qualification from {QUALIFICATION_DATES}
+            {" "}and the in-person London final on {FINAL_DATE}.
           </p>
         </div>
         {available && supabase ? (
