@@ -7,7 +7,7 @@ import { cloneElement, FormEvent, type ReactElement, useRef, useState } from "re
 
 import { SponsorLockup } from "@/components/brand";
 import { FINAL_DATE, QUALIFICATION_DATES } from "@/lib/event";
-import { MAX_CV_BYTES, REGISTRATION_COUNTRY, type StartRegistrationResponse } from "@/lib/registration";
+import { CV_CONSENT_TEXT, CV_SHARING_PUBLIC_COPY, MAX_CV_BYTES, REGISTRATION_COUNTRY, type StartRegistrationResponse } from "@/lib/registration";
 
 type Teammate = { key: number; fullName: string; email: string };
 type FieldErrors = Record<string, string[] | undefined>;
@@ -238,7 +238,7 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
         </section>
 
         <section className="form-section" aria-labelledby="support-heading">
-          <div className="form-section-heading"><span>03</span><div><h2 id="support-heading">Participation support</h2><p>Optional. Share only what the organising team needs to support your participation.</p></div></div>
+          <div className="form-section-heading"><span>03</span><div><h2 id="support-heading">Participation support</h2><p>Optional. Share only the information needed to support your attendance.</p></div></div>
           <Field id="accessibilityDietary" label="Accessibility or dietary requirements" optional error={errorFor("accessibilityDietary")} wide>
             <textarea id="accessibilityDietary" name="accessibilityDietary" rows={4} maxLength={1000} value={accessibilityText} onChange={(event) => setAccessibilityText(event.target.value)} />
           </Field>
@@ -254,7 +254,7 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
         </section>
 
         <section className="form-section" aria-labelledby="cv-heading">
-          <div className="form-section-heading"><span>04</span><div><h2 id="cv-heading">CV</h2><p>Optional · PDF only · Maximum 10 MB. Top 50 by ELO from the online phase advance to the London final. Their CVs are shared with Optiver.</p></div></div>
+          <div className="form-section-heading"><span>04</span><div><h2 id="cv-heading">CV</h2><p>Optional · PDF only · Maximum 10 MB. {CV_SHARING_PUBLIC_COPY}</p></div></div>
           <div className="file-control" id="cv">
             <input className="sr-only" ref={fileRef} id="cvFile" name="cv" type="file" accept=".pdf,application/pdf" onChange={(event) => onFileChange(event.target.files?.[0])} />
             {cv ? (
@@ -265,18 +265,18 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
           </div>
           <label className={`check-row cv-consent${!cv ? " disabled" : ""}`}>
             <input id="cvShareConsent" type="checkbox" checked={cvConsent} disabled={!cv} onChange={(event) => setCvConsent(event.target.checked)} aria-invalid={Boolean(errorFor("cvShareConsent"))} aria-describedby={errorFor("cvShareConsent") ? "cvShareConsent-error" : undefined} />
-            <span><strong>I consent to AI Chessathon sharing my CV with Optiver for recruitment-related opportunities.</strong><small>Declining this consent does not affect your eligibility or judging. This choice is separate from your registration.</small></span>
+            <span>{CV_CONSENT_TEXT}</span>
           </label>
           {errorFor("cvShareConsent") ? <p className="field-error" id="cvShareConsent-error">{errorFor("cvShareConsent")}</p> : null}
         </section>
 
         <section className="form-section" aria-labelledby="confirm-heading">
-          <div className="form-section-heading"><span>05</span><div><h2 id="confirm-heading">Availability and agreements</h2><p>Please confirm each item before submitting.</p></div></div>
+          <div className="form-section-heading"><span>05</span><div><h2 id="confirm-heading">Availability and confirmations</h2><p>Please confirm each item before submitting.</p></div></div>
           <div className="check-list">
             <Check name="availabilityOnline" error={errorFor("availabilityOnline")}>I confirm that I am available for the five-day online qualification from {QUALIFICATION_DATES}.</Check>
             <Check name="availabilityLondon" error={errorFor("availabilityLondon")}>I confirm that I can attend the London final on {FINAL_DATE} if selected.</Check>
             <Check name="rulesAccepted" error={errorFor("rulesAccepted")}>I agree to comply with the <Link href="/terms" target="_blank">competition rules and code of conduct</Link>.</Check>
-            <Check name="privacyAccepted" error={errorFor("privacyAccepted")}>I have read and accept the <Link href="/privacy" target="_blank">privacy notice</Link>.</Check>
+            <Check name="privacyAccepted" error={errorFor("privacyAccepted")}>I have read the <Link href="/privacy" target="_blank">privacy notice</Link>.</Check>
           </div>
           <div className="honeypot" aria-hidden="true"><label htmlFor="website">Website</label><input id="website" name="website" tabIndex={-1} autoComplete="off" /></div>
           <div className="submit-row">
@@ -298,7 +298,7 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
           <div><dt>Eligibility</dt><dd>United Kingdom only</dd></div>
           <div><dt>Sponsor</dt><dd><SponsorLockup className="aside-sponsor" /></dd></div>
         </dl>
-        <div className="aside-note"><span aria-hidden="true">i</span><p>Your CV is optional at registration and stored privately. Top 50 by ELO from the online phase advance to the London final. Their CVs are shared with Optiver.</p></div>
+        <div className="aside-note"><span aria-hidden="true">i</span><p>{CV_SHARING_PUBLIC_COPY} Uploaded CVs are stored privately.</p></div>
       </aside>
     </div>
   );

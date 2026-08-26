@@ -121,19 +121,21 @@ function requestFingerprint(input: RegistrationInput) {
   return sha256(JSON.stringify(input));
 }
 
-async function ensurePrivacyNoticeVersion(supabase: SupabaseClient) {
-  const controller = process.env.REGISTRATION_LEGAL_CONTROLLER_NAME?.trim();
-  if (!controller) {
-    throw new RegistrationError(503, "Registration legal information is not configured.", "legal_configuration_invalid");
-  }
-
-  const text = privacyNoticeSnapshot();
-  const hash = sha256(text);
+async function ensureActiveLegalDocument(
+  supabase: SupabaseClient,
+  input: {
+    documentKind: "privacy" | "cv_share_optiver";
+    version: string;
+    text: string;
+    effectiveAt: string;
+  },
+) {
+  const hash = sha256(input.text);
   const readExisting = () => supabase
     .from("legal_document_versions")
     .select("exact_text,text_sha256,is_active")
-    .eq("document_kind", "privacy")
-    .eq("version", PRIVACY_NOTICE_VERSION)
+    .eq("document_kind", input.documentKind)
+    .eq("version", input.version)
     .maybeSingle();
 
   let { data: existing, error } = await readExisting();
@@ -141,29 +143,73 @@ async function ensurePrivacyNoticeVersion(supabase: SupabaseClient) {
     throw new RegistrationError(503, "Registration legal information could not be verified.", "legal_configuration_invalid");
   }
 
+  if (existing && (existing.exact_text !== input.text || existing.text_sha256 !== hash)) {
+    throw new RegistrationError(503, "The approved legal document version does not match the published text.", "legal_configuration_invalid");
+  }
+
+  if (existing?.is_active) {
+    return { version: input.version, textSnapshot: input.text, textSha256: hash };
+  }
+
+  const deactivated = await supabase
+    .from("legal_document_versions")
+    .update({ is_active: false })
+    .eq("document_kind", input.documentKind)
+    .neq("version", input.version);
+  if (deactivated.error) {
+    throw new RegistrationError(503, "Registration legal information could not be activated.", "legal_configuration_invalid");
+  }
+
   if (!existing) {
     const inserted = await supabase.from("legal_document_versions").insert({
-      document_kind: "privacy",
-      version: PRIVACY_NOTICE_VERSION,
-      exact_text: text,
+      document_kind: input.documentKind,
+      version: input.version,
+      exact_text: input.text,
       text_sha256: hash,
-      effective_at: "2026-08-26T00:00:00.000Z",
+      effective_at: input.effectiveAt,
       is_active: true,
     });
     if (inserted.error) {
       ({ data: existing, error } = await readExisting());
-      if (error || !existing) {
+      if (error || !existing || existing.exact_text !== input.text || !existing.is_active) {
         throw new RegistrationError(503, "Registration legal information could not be activated.", "legal_configuration_invalid");
       }
-    } else {
-      existing = { exact_text: text, text_sha256: hash, is_active: true };
+    }
+  } else {
+    const activated = await supabase
+      .from("legal_document_versions")
+      .update({ is_active: true })
+      .eq("document_kind", input.documentKind)
+      .eq("version", input.version);
+    if (activated.error) {
+      throw new RegistrationError(503, "Registration legal information could not be activated.", "legal_configuration_invalid");
     }
   }
 
-  if (!existing.is_active || existing.exact_text !== text || existing.text_sha256 !== hash) {
-    throw new RegistrationError(503, "The approved privacy notice version does not match the published notice.", "legal_configuration_invalid");
+  return { version: input.version, textSnapshot: input.text, textSha256: hash };
+}
+
+async function ensurePrivacyNoticeVersion(supabase: SupabaseClient) {
+  const controller = process.env.REGISTRATION_LEGAL_CONTROLLER_NAME?.trim();
+  if (!controller) {
+    throw new RegistrationError(503, "Registration legal information is not configured.", "legal_configuration_invalid");
   }
-  return { version: PRIVACY_NOTICE_VERSION, textSnapshot: text, textSha256: hash };
+
+  return ensureActiveLegalDocument(supabase, {
+    documentKind: "privacy",
+    version: PRIVACY_NOTICE_VERSION,
+    text: privacyNoticeSnapshot(),
+    effectiveAt: "2026-08-26T00:00:00.000Z",
+  });
+}
+
+async function ensureCvConsentVersion(supabase: SupabaseClient) {
+  return ensureActiveLegalDocument(supabase, {
+    documentKind: "cv_share_optiver",
+    version: CV_CONSENT_VERSION,
+    text: CV_CONSENT_TEXT,
+    effectiveAt: "2026-08-26T00:00:00.000Z",
+  });
 }
 
 async function recordEmailOutcome(
@@ -268,6 +314,7 @@ async function uploadIsPresent(supabase: SupabaseClient, registrationId: string,
 
 export async function startRegistration(supabase: SupabaseClient, input: RegistrationInput) {
   const privacy = await ensurePrivacyNoticeVersion(supabase);
+  await ensureCvConsentVersion(supabase);
   const registrationId = randomUUID();
   const reference = referenceCode();
   const claimToken = input.cv ? completionToken(registrationId, input.idempotencyKey) : null;

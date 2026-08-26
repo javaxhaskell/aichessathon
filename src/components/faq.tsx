@@ -4,7 +4,7 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 
 import { FINAL_DATE, QUALIFICATION_DATES } from "@/lib/event";
-import { CONTACT_EMAIL } from "@/lib/registration";
+import { CONTACT_EMAIL, CV_SHARING_PUBLIC_COPY } from "@/lib/registration";
 
 const items: Array<{ id: string; question: string; answer: ReactNode }> = [
   {
@@ -22,7 +22,7 @@ const items: Array<{ id: string; question: string; answer: ReactNode }> = [
   {
     id: "format",
     question: "What is the format?",
-    answer: `Five days of online qualification, ${QUALIFICATION_DATES}. Ranking is by ELO. Top 50 from the online phase advance to the London final. Their CVs are shared with Optiver. The in-person final is on ${FINAL_DATE}, hosted at Encode Club, London. The technical specification will be published before qualification begins.`,
+    answer: `Five days of online qualification, ${QUALIFICATION_DATES}. Ranking is by ELO. Top 50 from the online phase advance to the London final. The in-person final is on ${FINAL_DATE}, hosted at Encode Club, London. ${CV_SHARING_PUBLIC_COPY} The technical specification will be published before qualification begins.`,
   },
   {
     id: "team",
@@ -45,7 +45,7 @@ const items: Array<{ id: string; question: string; answer: ReactNode }> = [
     id: "cv",
     question: "Do I have to share my CV with Optiver?",
     answer:
-      "Top 50 by ELO from the online phase advance to the London final. Their CVs are shared with Optiver. CV upload at registration is optional and does not affect eligibility.",
+      CV_SHARING_PUBLIC_COPY,
   },
   {
     id: "rules",

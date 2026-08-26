@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
 
 import { QUALIFICATION_DATES } from "./event";
-import { MAX_CV_BYTES, RULES_VERSION, registrationSchema } from "./registration";
+import {
+  CV_CONSENT_TEXT,
+  CV_CONSENT_VERSION,
+  MAX_CV_BYTES,
+  PRIVACY_CONSENT_TEXT,
+  PRIVACY_NOTICE_VERSION,
+  RULES_VERSION,
+  registrationSchema,
+} from "./registration";
 
 const base = {
   idempotencyKey: "7ad06b17-02b0-47d7-ab26-6b3bd936d9b8",
@@ -53,6 +61,23 @@ describe("registrationSchema", () => {
     expect(parsed.success).toBe(true);
   });
 
+  it("treats the CV-sharing-interest checkbox as optional and unchecked by default", () => {
+    const parsed = registrationSchema.parse(base);
+    expect(parsed.cvShareConsent).toBe(false);
+    expect(base.cvShareConsent).toBe(false);
+  });
+
+  it("allows registration when the CV-sharing-interest checkbox is declined", () => {
+    const withoutCv = registrationSchema.safeParse({ ...base, cvShareConsent: false, cv: null });
+    const withCv = registrationSchema.safeParse({
+      ...base,
+      cv: { name: "ada-cv.pdf", size: MAX_CV_BYTES, type: "application/pdf" },
+      cvShareConsent: false,
+    });
+    expect(withoutCv.success).toBe(true);
+    expect(withCv.success).toBe(true);
+  });
+
   it("rejects CV-sharing consent without a CV", () => {
     const parsed = registrationSchema.safeParse({ ...base, cvShareConsent: true });
     expect(parsed.success).toBe(false);
@@ -65,6 +90,15 @@ describe("registrationSchema", () => {
       cvShareConsent: false,
     });
     expect(parsed.success).toBe(true);
+  });
+
+  it("stores the current privacy and CV-interest consent wording", () => {
+    expect(PRIVACY_NOTICE_VERSION).toBe("2026-08-26.v2");
+    expect(PRIVACY_CONSENT_TEXT).toBe("I have read the privacy notice.");
+    expect(CV_CONSENT_VERSION).toBe("2026-08-26.v1");
+    expect(CV_CONSENT_TEXT).toBe(
+      "I would like AI Chessathon to contact me if I qualify for the London final so that I can choose whether to share my CV with Optiver for recruitment-related opportunities. This is optional and will not affect my eligibility, ranking, judging, selection, attendance, or prizes.",
+    );
   });
 
   it("requires explicit consent for participation-support details", () => {

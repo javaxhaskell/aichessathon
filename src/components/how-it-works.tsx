@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { FINAL_DATE, QUALIFICATION_DATES } from "@/lib/event";
+import { CV_SHARING_PUBLIC_COPY } from "@/lib/registration";
 
 const steps = [
   {
@@ -17,7 +18,7 @@ const steps = [
   {
     label: "Final",
     index: "03",
-    copy: `The top 50 by ELO ranking compete in person on ${FINAL_DATE}, hosted at Encode Club, London. Their CVs are shared with Optiver.`,
+    copy: `The top 50 by ELO ranking compete in person on ${FINAL_DATE}, hosted at Encode Club, London. ${CV_SHARING_PUBLIC_COPY}`,
     extra: <p className="how-meta">London</p>,
   },
 ] as const;

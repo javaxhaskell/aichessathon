@@ -7,15 +7,16 @@ export const CONTACT_EMAIL = "events@aichessathon.com";
 export const REGISTRATION_COUNTRY = "United Kingdom";
 export const CV_BUCKET = "registration-cvs";
 export const MAX_CV_BYTES = 10 * 1024 * 1024;
-export const PRIVACY_NOTICE_VERSION = "2026-08-26.v1";
+export const PRIVACY_NOTICE_VERSION = "2026-08-26.v2";
 export const RULES_VERSION = "2026-08-25.v1";
-export const CV_CONSENT_VERSION = "2026-08-24.v1";
+export const CV_CONSENT_VERSION = "2026-08-26.v1";
 export const ACCESSIBILITY_CONSENT_VERSION = "2026-08-24.v1";
 
-export const PRIVACY_CONSENT_TEXT =
-  "I have read and accept the AI Chessathon privacy notice.";
+export const PRIVACY_CONSENT_TEXT = "I have read the privacy notice.";
 export const CV_CONSENT_TEXT =
-  "I consent to AI Chessathon sharing my CV with Optiver for recruitment-related opportunities. Declining this consent does not affect eligibility or judging.";
+  "I would like AI Chessathon to contact me if I qualify for the London final so that I can choose whether to share my CV with Optiver for recruitment-related opportunities. This is optional and will not affect my eligibility, ranking, judging, selection, attendance, or prizes.";
+export const CV_SHARING_PUBLIC_COPY =
+  "CV upload is optional. If you qualify for the London final, you may choose whether to share your CV with Optiver for recruitment-related opportunities. This choice does not affect eligibility, ranking, judging, selection, attendance, or prizes.";
 export const ACCESSIBILITY_CONSENT_TEXT =
   "I explicitly consent to AI Chessathon using the accessibility or dietary information I provide only to support my participation.";
 
@@ -63,7 +64,7 @@ export const registrationSchema = z.object({
   availabilityOnline: z.literal(true, { error: `Confirm your availability for the online qualification, ${QUALIFICATION_DATES}.` }),
   availabilityLondon: z.literal(true, { error: "Confirm your availability for the London final." }),
   rulesAccepted: z.literal(true, { error: "Accept the competition rules and code of conduct." }),
-  privacyAccepted: z.literal(true, { error: "Accept the privacy notice." }),
+  privacyAccepted: z.literal(true, { error: "Confirm you have read the privacy notice." }),
   technicalBackground: optionalText(2000),
   accessibilityDietary: optionalText(1000),
   accessibilityConsent: z.boolean(),

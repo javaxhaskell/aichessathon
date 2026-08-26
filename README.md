@@ -16,6 +16,8 @@ Public website and registration MVP for [AI Chessathon](https://aichessathon.com
 
 There is intentionally no public admin dashboard. Registration tables have RLS enabled and forced, client roles have no grants, and the private CV bucket has no public read policy.
 
+Before building any competition platform (ranking, finalists, CV transfer, organiser tools), read [docs/future-platform-data-contract.md](docs/future-platform-data-contract.md). Those controls are not implemented here.
+
 ## Local development
 
 ```bash
@@ -101,7 +103,7 @@ Email is optional. Registration is committed before delivery is attempted, so an
 5. Files remain marked `unscanned` for any future malware-scanning workflow and are never exposed by a public admin route.
 6. Failed or cancelled upload applications are deleted. A protected daily job deletes expired pending applications and drains a private, retryable file-cleanup queue.
 
-CV sharing consent is separate, unchecked by default, saved with timestamp/version/text snapshot, and never affects eligibility or review state. Every consent decision also records the full published privacy-notice text and hash for that version. Participation-support information is isolated from routine reviewer data.
+The registration CV checkbox is optional contact-interest only, unchecked by default, saved with timestamp/version/text snapshot, and never affects eligibility, ranking, judging, selection, attendance, or prizes. It does not authorise sharing a CV with Optiver. Every consent decision also records the full published privacy-notice text and hash for that version. Participation-support information is isolated from routine reviewer data.
 
 Confirmation pages require a short-lived, server-signed receipt; typing or modifying a confirmation URL cannot create a success state.
 
