@@ -231,13 +231,16 @@ h1 { max-width: 920px; margin: 0; font-size: clamp(48px, 7.6vw, 112px); line-hei
 .team-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; gap: 28px; margin: 0; padding: 0; list-style: none; }
 .team-grid > li { display: flex; align-items: start; min-width: 0; }
 .team-card { width: 100%; display: grid; align-content: start; align-items: start; justify-items: start; gap: 22px; padding: 4px 8px 8px 0; color: inherit; transform: translateY(0); transition: transform .45s cubic-bezier(.16,1,.3,1); }
+.team-photo-link { display: block; }
 .team-photo { display: block; position: relative; width: 132px; height: 132px; aspect-ratio: 1; overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; background: #10161d; box-shadow: 0 18px 40px rgba(0,0,0,.28); }
 .team-photo img { object-fit: cover; object-position: center; filter: grayscale(.5) saturate(.45) brightness(.96) contrast(1.05); transition: filter .45s cubic-bezier(.16,1,.3,1); }
 .team-copy { display: grid; align-content: start; gap: 8px; min-width: 0; }
 .team-name { color: #eef2f6; font-size: 18px; font-weight: 560; letter-spacing: -.03em; border-bottom: 1px solid transparent; width: max-content; max-width: 100%; }
-.team-card:hover .team-name, .team-card:focus-visible .team-name { border-color: #8ca5ef; }
+.team-card:hover .team-name, .team-name:focus-visible { border-color: #8ca5ef; }
 .team-role { color: #8ea0c8; font-family: var(--font-mono); font-size: 10px; font-weight: 520; letter-spacing: .12em; text-transform: uppercase; }
 .team-bio { max-width: 280px; color: #8b959f; font-size: 14px; line-height: 1.6; letter-spacing: -.01em; }
+.team-bio-link { color: inherit; font-weight: inherit; text-decoration: none; text-underline-offset: 2px; text-decoration-thickness: 1px; transition: color .2s ease; }
+.team-bio-link:hover { color: #c8d0d6; text-decoration-line: underline; }
 .team-heading { display: grid; gap: 10px; margin-bottom: 48px; }
 .team-heading h2 { margin: 0; font-size: clamp(24px, 2.8vw, 36px); font-weight: 510; line-height: 1.15; letter-spacing: -.04em; }
 .positioning-grid { margin-top: 54px; }
@@ -293,7 +296,7 @@ a.how-meta:hover { color: #e8eef6; border-color: #8ca5ef; }
 @media (hover: hover) {
   .sponsor-card:hover { transform: translateY(-3px); }
   .team-card:hover { transform: translateY(-4px); }
-  .team-card:hover .team-photo img, .team-card:focus-visible .team-photo img { filter: grayscale(.25) saturate(.7) brightness(1) contrast(1.03); }
+  .team-card:hover .team-photo img, .team-card:focus-within .team-photo img { filter: grayscale(.25) saturate(.7) brightness(1) contrast(1.03); }
 }
 
 /* Shared footer and pages */

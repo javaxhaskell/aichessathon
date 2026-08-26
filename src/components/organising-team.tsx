@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Image, { type StaticImageData } from "next/image";
 
 import arham from "@/assets/team/arham-shuaib.webp";
@@ -5,38 +6,70 @@ import arham2026 from "@/assets/team/arham-shuaib-2026.webp";
 import michael from "@/assets/team/michael-domarkas.webp";
 import vincent from "@/assets/team/vincent-lee.webp";
 
+function BioLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a className="team-bio-link" href={href} target="_blank" rel="noopener noreferrer">
+      {children}
+    </a>
+  );
+}
+
 const organisers: Array<{
   name: string;
   role: string;
-  bio: string;
+  bio: ReactNode;
   href: string;
   photo: StaticImageData;
 }> = [
   {
     name: "Arham Shuaib",
     role: "Lead",
-    bio: "Software Engineer @ Combinely (YC X25). Palantir and Null Fellow. Previously interned at Disney, JPM, and Bank of America.",
+    bio: (
+      <>
+        Software Engineer @{" "}
+        <BioLink href="https://www.combinely.ai/">Combinely</BioLink> (YC X25). Palantir and Null
+        Fellow. Previously interned at Disney, JPM, and Bank of America.
+      </>
+    ),
     href: "https://www.linkedin.com/in/arham-shuaib/",
     photo: arham2026,
   },
   {
     name: "Tanuj Kakumani",
     role: "Growth",
-    bio: "Founder of simplytk. Ex-A* AI (10k users). Spring Intern @ Citadel, Optiver, IMC Trading. Imperial Econ & Data Science.",
+    bio: (
+      <>
+        Founder of <BioLink href="https://simplytk.com/">simplytk</BioLink>. Ex-A* AI (10k users).
+        Spring Intern @ Citadel, <BioLink href="https://www.optiver.com/">Optiver</BioLink>, IMC
+        Trading. Imperial Econ & Data Science.
+      </>
+    ),
     href: "https://www.linkedin.com/in/tanujkakumani/",
     photo: arham,
   },
   {
     name: "Michael Domarkas",
     role: "Judge",
-    bio: "Founder @ Frontier Computing (YC S26). Previously at the University of Cambridge.",
+    bio: (
+      <>
+        Founder @{" "}
+        <BioLink href="https://frontier.site/">Frontier Computing</BioLink> (YC S26). Previously at
+        the University of Cambridge.
+      </>
+    ),
     href: "https://www.linkedin.com/in/michael-domarkas/",
     photo: michael,
   },
   {
     name: "Vincent Lee",
     role: "Operations",
-    bio: "Incoming Quant Research Intern @ Optiver. Imperial BSc in Mathematics with Statistics.",
+    bio: (
+      <>
+        Incoming Quant Research Intern @{" "}
+        <BioLink href="https://www.optiver.com/">Optiver</BioLink>. Imperial BSc in Mathematics with
+        Statistics.
+      </>
+    ),
     href: "https://www.linkedin.com/in/vincentyrlee/",
     photo: vincent,
   },
@@ -52,19 +85,21 @@ export function OrganisingTeam() {
       <ul className="team-grid" data-reveal>
         {organisers.map((person) => (
           <li key={person.name}>
-            <a className="team-card" href={person.href} target="_blank" rel="noopener noreferrer">
-              <span className="team-photo">
-                <Image src={person.photo} alt="" fill sizes="132px" placeholder="blur" />
-              </span>
+            <article className="team-card">
+              <a className="team-photo-link" href={person.href} target="_blank" rel="noopener noreferrer">
+                <span className="team-photo">
+                  <Image src={person.photo} alt="" fill sizes="132px" placeholder="blur" />
+                </span>
+              </a>
               <span className="team-copy">
-                <span className="team-name">
+                <a className="team-name" href={person.href} target="_blank" rel="noopener noreferrer">
                   {person.name}
                   <span className="sr-only"> on LinkedIn</span>
-                </span>
+                </a>
                 <span className="team-role">{person.role}</span>
                 <span className="team-bio">{person.bio}</span>
               </span>
-            </a>
+            </article>
           </li>
         ))}
       </ul>
