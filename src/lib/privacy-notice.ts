@@ -35,7 +35,7 @@ export function getPrivacyNotice(controller: string): PrivacyNoticeSection[] {
       title: "3. How and why we use information",
       paragraphs: [
         "We use core registration information to administer the competition, communicate with applicants, form teams where requested, assess registrations, maintain event security, and operate the online qualification and London final. Our lawful bases are taking steps at your request, administering the competition under its terms, and our legitimate interests in running a fair and secure event.",
-        "We use optional accessibility or dietary information only with your explicit consent to support participation. We share a CV with Optiver for recruitment-related opportunities only when you select the separate, optional CV consent. Refusing or withdrawing that CV consent does not affect eligibility or judging.",
+        "We use optional accessibility or dietary information only with your explicit consent to support participation. Top 50 by ELO from the online phase advance to the London final. Their CVs are shared with Optiver. A separate optional consent also covers sharing a CV with Optiver for recruitment-related opportunities; refusing or withdrawing that consent does not affect eligibility or judging.",
       ],
     },
     {
@@ -44,7 +44,7 @@ export function getPrivacyNotice(controller: string): PrivacyNoticeSection[] {
       title: "4. Who receives information",
       paragraphs: [
         "Access is limited to authorised AI Chessathon organisers and service providers that host the website, database, private file storage, and confirmation email. Those providers process information under their own security and data-processing terms.",
-        "Optiver receives your CV only if you give the separate explicit opt-in. Optiver receives no routine access to the registration database or private storage. If a CV is shared, Optiver may process it independently for recruitment and should provide its own privacy information.",
+        "Optiver receives CVs of the top 50 by ELO from the online phase. A separate explicit opt-in can also share a CV with Optiver before that stage. Optiver receives no routine access to the registration database or private storage. If a CV is shared, Optiver may process it independently for recruitment and should provide its own privacy information.",
         "Some service providers may process information outside the United Kingdom. Where transfer rules apply, we require an appropriate legal mechanism and safeguards.",
       ],
     },

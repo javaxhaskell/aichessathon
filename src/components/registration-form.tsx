@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cloneElement, FormEvent, type ReactElement, useRef, useState } from "react";
 
+import { SponsorLockup } from "@/components/brand";
 import { FINAL_DATE, QUALIFICATION_DATES } from "@/lib/event";
 import { MAX_CV_BYTES, type StartRegistrationResponse } from "@/lib/registration";
 
@@ -249,7 +250,7 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
         </section>
 
         <section className="form-section" aria-labelledby="cv-heading">
-          <div className="form-section-heading"><span>04</span><div><h2 id="cv-heading">CV</h2><p>Optional · PDF only · Maximum 10 MB</p></div></div>
+          <div className="form-section-heading"><span>04</span><div><h2 id="cv-heading">CV</h2><p>Optional · PDF only · Maximum 10 MB. Top 50 by ELO from the online phase advance to the London final. Their CVs are shared with Optiver.</p></div></div>
           <div className="file-control" id="cv">
             <input className="sr-only" ref={fileRef} id="cvFile" name="cv" type="file" accept=".pdf,application/pdf" onChange={(event) => onFileChange(event.target.files?.[0])} />
             {cv ? (
@@ -289,10 +290,10 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
         <p>Build an autonomous chess agent, qualify online, and compete in the London final.</p>
         <dl>
           <div><dt>Online phase</dt><dd>{QUALIFICATION_DATES}<br /><span>Five days · Online</span></dd></div>
-          <div><dt>London final</dt><dd>{FINAL_DATE}</dd></div>
-          <div><dt>Sponsor</dt><dd>Optiver</dd></div>
+          <div><dt>London final</dt><dd>{FINAL_DATE}<br /><span>Encode Club, London</span></dd></div>
+          <div><dt>Sponsor</dt><dd><SponsorLockup className="aside-sponsor" /></dd></div>
         </dl>
-        <div className="aside-note"><span aria-hidden="true">i</span><p>Your CV is optional and stored privately. It is shared with Optiver only if you actively select the separate consent box.</p></div>
+        <div className="aside-note"><span aria-hidden="true">i</span><p>Your CV is optional at registration and stored privately. Top 50 by ELO from the online phase advance to the London final. Their CVs are shared with Optiver.</p></div>
       </aside>
     </div>
   );

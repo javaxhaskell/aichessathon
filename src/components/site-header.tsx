@@ -1,14 +1,14 @@
 import Link from "next/link";
 
+import { BrandLockup } from "@/components/brand";
+
 export function SiteHeader({ compact = false }: { compact?: boolean }) {
   return (
     <header className={`site-header${compact ? " site-header-compact" : ""}`}>
-      <Link className="wordmark" href="/" aria-label="AI Chessathon home">
-        <span className="wordmark-mark" aria-hidden="true">AC</span>
-        <span>AI Chessathon</span>
-      </Link>
+      <BrandLockup priority animate />
       <nav className="nav-links" aria-label="Primary navigation">
         <Link href="/#format">Format</Link>
+        <Link href="/#team">Team</Link>
         <Link href="/terms">Competition rules</Link>
         <Link href="/privacy">Privacy</Link>
       </nav>

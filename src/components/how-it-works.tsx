@@ -1,0 +1,54 @@
+import Link from "next/link";
+
+import { FINAL_DATE, QUALIFICATION_DATES } from "@/lib/event";
+
+const steps = [
+  {
+    label: "Register",
+    index: "01",
+    copy: "Tell us about your background, links, and team status.",
+    extra: (
+      <Link className="how-meta" href="/register">
+        Site form
+      </Link>
+    ),
+  },
+  {
+    label: "Qualify",
+    index: "02",
+    copy: `Five days of agent matches, ${QUALIFICATION_DATES}. Ranking is by ELO. Top 50 from the online phase advance to the London final.`,
+    extra: <p className="how-meta">Online</p>,
+  },
+  {
+    label: "Final",
+    index: "03",
+    copy: `The top 50 by ELO ranking compete in person on ${FINAL_DATE}, hosted at Encode Club, London. Their CVs are shared with Optiver.`,
+    extra: <p className="how-meta">London</p>,
+  },
+] as const;
+
+export function HowItWorks() {
+  return (
+    <section className="format-section section-shell" id="format" aria-labelledby="format-title">
+      <div className="section-heading" data-reveal>
+        <p className="section-index">03 · Format</p>
+        <h2 id="format-title">Three steps to the final.</h2>
+      </div>
+      <ol className="how-steps" data-reveal>
+        {steps.map((step) => (
+          <li className="how-step" key={step.index}>
+            <div className="how-rail">
+              <p className="how-label" id={`format-step-${step.index}`}>{step.label}</p>
+              <span className="how-marker" aria-hidden="true" />
+            </div>
+            <article className="how-body" aria-labelledby={`format-step-${step.index}`}>
+              <span>{step.index}</span>
+              <p>{step.copy}</p>
+              {step.extra}
+            </article>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}

@@ -1,0 +1,39 @@
+.aichessathon-mark {
+  flex: 0 0 auto;
+  width: 68px;
+  height: 68px;
+  overflow: visible;
+  background: none;
+  mix-blend-mode: normal;
+  shape-rendering: geometricPrecision;
+}
+
+.aichessathon-mark-tile {
+  fill: #eee6d2;
+  opacity: var(--tile);
+  animation: aichessathon-mark-ripple 4s step-end infinite;
+  animation-delay: calc(var(--ripple) * 0.8s - 4s);
+}
+
+@keyframes aichessathon-mark-ripple {
+  0% { opacity: var(--tile); }
+  20% { opacity: var(--peak); }
+  40% { opacity: var(--tile); }
+  60% { opacity: var(--dim); }
+  80% { opacity: var(--tile); }
+  100% { opacity: var(--tile); }
+}
+
+@media (max-width: 600px) {
+  .aichessathon-mark {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aichessathon-mark-tile {
+    animation: none;
+    opacity: var(--tile);
+  }
+}
