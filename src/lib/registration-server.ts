@@ -127,7 +127,7 @@ async function ensurePrivacyNoticeVersion(supabase: SupabaseClient) {
     throw new RegistrationError(503, "Registration legal information is not configured.", "legal_configuration_invalid");
   }
 
-  const text = privacyNoticeSnapshot(controller);
+  const text = privacyNoticeSnapshot();
   const hash = sha256(text);
   const readExisting = () => supabase
     .from("legal_document_versions")
@@ -147,7 +147,7 @@ async function ensurePrivacyNoticeVersion(supabase: SupabaseClient) {
       version: PRIVACY_NOTICE_VERSION,
       exact_text: text,
       text_sha256: hash,
-      effective_at: "2026-08-24T00:00:00.000Z",
+      effective_at: "2026-08-26T00:00:00.000Z",
       is_active: true,
     });
     if (inserted.error) {

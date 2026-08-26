@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 const base = "https://aichessathon.com";
 const eventLastModified = new Date("2026-08-25T00:00:00Z");
-const privacyLastModified = new Date("2026-08-24T00:00:00Z");
+const privacyLastModified = new Date("2026-08-26T00:00:00Z");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

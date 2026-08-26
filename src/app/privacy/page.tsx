@@ -14,8 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
-  const controller = process.env.REGISTRATION_LEGAL_CONTROLLER_NAME || "the AI Chessathon organising team";
-  const sections = getPrivacyNotice(controller);
+  const sections = getPrivacyNotice();
   return (
     <>
       <SiteHeader compact />
