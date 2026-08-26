@@ -1,8 +1,8 @@
 import Image, { type StaticImageData } from "next/image";
 
 import arham from "@/assets/team/arham-shuaib.webp";
+import arham2026 from "@/assets/team/arham-shuaib-2026.webp";
 import michael from "@/assets/team/michael-domarkas.webp";
-import tanuj from "@/assets/team/tanuj-kakumani.webp";
 import vincent from "@/assets/team/vincent-lee.webp";
 
 const organisers: Array<{
@@ -17,7 +17,7 @@ const organisers: Array<{
     role: "Lead",
     bio: "Software Engineer @ Combinely (YC X25). Palantir and Null Fellow. Previously interned at Disney, JPM, and Bank of America.",
     href: "https://www.linkedin.com/in/arham-shuaib/",
-    photo: tanuj,
+    photo: arham2026,
   },
   {
     name: "Tanuj Kakumani",

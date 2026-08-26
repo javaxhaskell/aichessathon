@@ -15,7 +15,11 @@ const nextConfig: NextConfig = {
     return config;
   },
   async rewrites() {
-    return [{ source: "/opengraph-image", destination: "/opengraph-image.png" }];
+    return [
+      { source: "/opengraph-image", destination: "/opengraph-image.png" },
+      { source: "/icon", destination: "/icon.png" },
+      { source: "/apple-icon", destination: "/apple-icon.png" },
+    ];
   },
   async redirects() {
     return [
