@@ -22,7 +22,7 @@ const steps = [
   },
 ] as const;
 
-export function HowItWorks({ formHref = "/register" }: { formHref?: string }) {
+export function HowItWorks({ formHref = "/register#about-you" }: { formHref?: string }) {
   return (
     <section className="format-section section-shell" id="format" aria-labelledby="format-title">
       <div className="section-heading" data-reveal>
@@ -40,7 +40,7 @@ export function HowItWorks({ formHref = "/register" }: { formHref?: string }) {
               <span>{step.index}</span>
               <p>{step.copy}</p>
               {"extra" in step ? step.extra : (
-                formHref.startsWith("#") ? (
+                formHref.includes("#") ? (
                   <a className="how-meta" href={formHref}>
                     Site form
                   </a>

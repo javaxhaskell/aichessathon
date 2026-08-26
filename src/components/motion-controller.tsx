@@ -7,6 +7,11 @@ export function MotionController() {
   const pathname = usePathname();
 
   useLayoutEffect(() => {
+    const hashId = decodeURIComponent(window.location.hash.replace(/^#/, ""));
+    if (hashId) {
+      document.getElementById(hashId)?.scrollIntoView();
+    }
+
     const root = document.documentElement;
     const elements = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
