@@ -281,7 +281,7 @@ a.how-meta:hover { color: #e8eef6; border-color: #8ca5ef; }
 .principle-grid span { color: #5f6c7a; font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; }
 .principle-grid h3 { margin: 14px 0 10px; font-size: 22px; font-weight: 520; letter-spacing: -.03em; }
 .principle-grid p { max-width: 340px; margin: 0; color: #8b959f; font-size: 15px; line-height: 1.65; letter-spacing: -.01em; }
-.cta-section { margin-top: 40px; padding: clamp(88px, 11vw, 150px) clamp(28px, 6vw, 90px); border: 1px solid #27313d; border-radius: 18px; background: radial-gradient(circle at 80% 20%, rgba(80,110,188,.14), transparent 28rem), #0a0e13; background-position: 0 0; animation: ambient-drift 12s ease-in-out infinite alternate; }
+.cta-section { margin-top: 40px; padding: clamp(88px, 11vw, 150px) clamp(28px, 6vw, 90px); border: none; border-radius: 18px; background: radial-gradient(circle at 80% 20%, rgba(80,110,188,.14), transparent 28rem), #0a0e13; background-position: 0 0; animation: ambient-drift 12s ease-in-out infinite alternate; }
 .cta-section h2 { max-width: 900px; font-size: clamp(48px, 7vw, 96px); }
 .cta-section > div { display: flex; align-items: center; gap: 28px; margin-top: 52px; }
 .cta-section > div p { color: #75808c; font-size: 13px; }
