@@ -494,7 +494,6 @@ export function AgentPipeline() {
             </span>
             <span className="pipeline-host">server</span>
           </div>
-          <p className="pipeline-label" id="pipeline-deploy">Deploy to the server</p>
         </div>
       </li>
       <li className="pipeline-step">
