@@ -22,7 +22,7 @@ const organisers: Array<{
   {
     name: "Tanuj Kakumani",
     role: "Growth",
-    bio: "Founder of A* AI, scaled to 10K users. Previous spring weeks at Optiver, Citadel, and IMC.",
+    bio: "Founder of simplytk. Ex-A* AI (10k users). Spring Intern @ Citadel, Optiver, IMC Trading. Imperial Econ & Data Science.",
     href: "https://www.linkedin.com/in/tanujkakumani/",
     photo: arham,
   },
