@@ -17,14 +17,14 @@ const organisers: Array<{
     role: "Lead",
     bio: "Software Engineer @ Combinely (YC X25). Palantir and Null Fellow. Previously interned at Disney, JPM, and Bank of America.",
     href: "https://www.linkedin.com/in/arham-shuaib/",
-    photo: arham,
+    photo: tanuj,
   },
   {
     name: "Tanuj Kakumani",
     role: "Growth",
     bio: "Founder of A* AI, scaled to 10K users. Previous spring weeks at Optiver, Citadel, and IMC.",
     href: "https://www.linkedin.com/in/tanujkakumani/",
-    photo: tanuj,
+    photo: arham,
   },
   {
     name: "Michael Domarkas",
