@@ -2,6 +2,18 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  turbopack: {
+    rules: {
+      "*.bin": { type: "asset" },
+    },
+  },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.bin$/,
+      type: "asset/resource",
+    });
+    return config;
+  },
   async rewrites() {
     return [{ source: "/opengraph-image", destination: "/opengraph-image.png" }];
   },

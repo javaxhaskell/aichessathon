@@ -60,9 +60,9 @@ html.motion-ready [data-reveal].is-visible { opacity: 1; translate: 0 0; filter:
   align-items: center;
   border-bottom: 1px solid rgba(255,255,255,.09);
 }
-.wordmark { display: inline-flex; align-items: center; gap: 16px; width: max-content; font-size: 22px; line-height: 1.1; font-weight: 610; letter-spacing: -.02em; }
+.wordmark { display: inline-flex; align-items: center; gap: 11px; width: max-content; font-size: 22px; line-height: 1.1; font-weight: 610; letter-spacing: -.02em; }
 .wordmark-logo,
-.wordmark-logo.aichessathon-mark { width: 68px; height: 68px; object-fit: contain; }
+.wordmark-logo.aichessathon-mark { width: 36px; height: 36px; object-fit: contain; }
 .nav-links { display: flex; align-items: center; gap: 32px; color: #aeb7c2; font-size: 14px; }
 .nav-links a { transition: color .2s ease; }
 .nav-links a:hover { color: #fff; }
@@ -205,9 +205,9 @@ h1 { max-width: 920px; margin: 0; font-size: clamp(48px, 7.6vw, 112px); line-hei
   .site-header, .section-shell { width: min(100% - 28px, 1440px); }
   .site-header,
   .site-header.site-header-compact { height: 88px; }
-  .wordmark { gap: 12px; font-size: 16px; }
+  .wordmark { gap: 8px; font-size: 16px; }
   .wordmark-logo,
-  .wordmark-logo.aichessathon-mark { width: 48px; height: 48px; }
+  .wordmark-logo.aichessathon-mark { width: 26px; height: 26px; }
   .hero { padding-top: 62px; }
   h1 { font-size: clamp(46px, 14vw, 64px); letter-spacing: -.055em; }
   .hero-intro { margin-top: 28px; }

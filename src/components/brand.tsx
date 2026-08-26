@@ -3,10 +3,10 @@ import Link from "next/link";
 import { BrandMark } from "@/components/brand-mark";
 import { OptiverMark } from "@/components/optiver-mark";
 
-export function BrandLockup(_props?: { priority?: boolean; animate?: boolean }) {
+export function BrandLockup({ priority, animate }: { priority?: boolean; animate?: boolean }) {
   return (
     <Link className="wordmark" href="/" aria-label="AI Chessathon home">
-      <BrandMark />
+      <BrandMark priority={priority} animate={animate} />
       <span>AI Chessathon</span>
     </Link>
   );

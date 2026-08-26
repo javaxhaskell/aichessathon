@@ -7,7 +7,7 @@ export function SiteFooter() {
   return (
     <footer className="site-footer section-shell">
       <div className="footer-brand">
-        <BrandLockup animate={false} />
+        <BrandLockup animate />
         <SponsorLockup className="footer-sponsor" />
       </div>
       <div className="footer-links">
