@@ -205,6 +205,7 @@ h1 { max-width: 920px; margin: 0; font-size: clamp(48px, 7.6vw, 112px); line-hei
   .site-header, .section-shell { width: min(100% - 28px, 1440px); }
   .site-header,
   .site-header.site-header-compact { height: 88px; }
+  #about-you { scroll-margin-top: 100px; }
   .wordmark { gap: 8px; font-size: 16px; }
   .wordmark-logo,
   .wordmark-logo.aichessathon-mark { width: 26px; height: 26px; }
@@ -316,6 +317,7 @@ a.how-meta:hover { color: #e8eef6; border-color: #8ca5ef; }
 .unavailable-panel a:not(.text-link), .legal-copy a, .confirmation-email a { color: #cbd8ff; text-decoration: underline; text-decoration-color: #4a5c86; text-underline-offset: 3px; }
 
 /* Registration */
+#about-you { scroll-margin-top: 120px; }
 .registration-layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; align-items: start; gap: clamp(48px, 7vw, 96px); padding: 72px 0 60px; }
 .registration-form { min-width: 0; }
 .form-section { padding: 0 0 76px; margin: 0 0 76px; border-bottom: 1px solid var(--line); }

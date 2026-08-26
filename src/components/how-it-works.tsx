@@ -7,11 +7,6 @@ const steps = [
     label: "Register",
     index: "01",
     copy: "Tell us about your background, links, and team status.",
-    extra: (
-      <Link className="how-meta" href="/register">
-        Site form
-      </Link>
-    ),
   },
   {
     label: "Qualify",
@@ -27,7 +22,7 @@ const steps = [
   },
 ] as const;
 
-export function HowItWorks() {
+export function HowItWorks({ formHref = "/register" }: { formHref?: string }) {
   return (
     <section className="format-section section-shell" id="format" aria-labelledby="format-title">
       <div className="section-heading" data-reveal>
@@ -44,7 +39,17 @@ export function HowItWorks() {
             <article className="how-body" aria-labelledby={`format-step-${step.index}`}>
               <span>{step.index}</span>
               <p>{step.copy}</p>
-              {step.extra}
+              {"extra" in step ? step.extra : (
+                formHref.startsWith("#") ? (
+                  <a className="how-meta" href={formHref}>
+                    Site form
+                  </a>
+                ) : (
+                  <Link className="how-meta" href={formHref}>
+                    Site form
+                  </Link>
+                )
+              )}
             </article>
           </li>
         ))}

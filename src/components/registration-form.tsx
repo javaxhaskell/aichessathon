@@ -185,7 +185,7 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
           </div>
         ) : null}
 
-        <section className="form-section" aria-labelledby="about-you-heading">
+        <section className="form-section" id="about-you" aria-labelledby="about-you-heading">
           <div className="form-section-heading"><span>01</span><div><h2 id="about-you-heading">About you</h2><p>Tell us how to contact you and where you are currently working or studying.</p></div></div>
           <div className="field-grid">
             <Field id="fullName" label="Full name" error={errorFor("fullName")}><input id="fullName" name="fullName" autoComplete="name" required maxLength={120} /></Field>

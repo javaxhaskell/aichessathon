@@ -33,11 +33,11 @@ export default function RegisterPage() {
             {" "}and the in-person London final on {FINAL_DATE}. Registration is for the United Kingdom only.
           </p>
         </div>
-        <HowItWorks />
+        <HowItWorks formHref="#about-you" />
         {available && supabase ? (
           <RegistrationForm supabaseKey={supabase.key} supabaseUrl={supabase.url} />
         ) : (
-          <section className="unavailable-panel" role="status" aria-labelledby="registration-unavailable-title">
+          <section className="unavailable-panel" id="about-you" role="status" aria-labelledby="registration-unavailable-title">
             <p className="status-kicker">Registration status</p>
             <h2 id="registration-unavailable-title">Registration is temporarily unavailable.</h2>
             <p>
