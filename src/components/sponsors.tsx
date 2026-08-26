@@ -7,8 +7,7 @@ export function Sponsors() {
   return (
     <section className="sponsors-section section-shell" id="sponsors" aria-labelledby="sponsors-title">
       <div className="sponsors-heading" data-reveal>
-        <p className="section-index">05 · Our sponsor</p>
-        <h2 id="sponsors-title">Our Sponsor</h2>
+        <p className="section-index" id="sponsors-title">05 · Our sponsor</p>
       </div>
       <div className="sponsor-grid">
         <a
