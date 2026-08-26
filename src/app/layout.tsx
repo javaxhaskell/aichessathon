@@ -27,13 +27,13 @@ export const metadata: Metadata = {
     siteName: "AI Chessathon",
     title: "AI Chessathon: Build a chess agent. Put it on the board.",
     description: `Online qualification ${QUALIFICATION_DATES}. London final ${FINAL_DATE}. Sponsored by Optiver.`,
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "AI Chessathon, autonomous agents competing on the board" }],
+    images: [{ url: "/opengraph-image?v=knight", width: 1200, height: 630, alt: "Chess × Machine Learning Hackathon, sponsored by Optiver" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "AI Chessathon: Build a chess agent. Put it on the board.",
     description: `Online qualification ${QUALIFICATION_DATES}. London final ${FINAL_DATE}. Sponsored by Optiver.`,
-    images: ["/opengraph-image"],
+    images: ["/opengraph-image?v=knight"],
   },
   category: "technology",
 };
