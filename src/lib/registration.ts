@@ -4,6 +4,7 @@ import { QUALIFICATION_DATES } from "./event";
 
 export const SITE_URL = "https://aichessathon.com";
 export const CONTACT_EMAIL = "events@aichessathon.com";
+export const REGISTRATION_COUNTRY = "United Kingdom";
 export const CV_BUCKET = "registration-cvs";
 export const MAX_CV_BYTES = 10 * 1024 * 1024;
 export const PRIVACY_NOTICE_VERSION = "2026-08-24.v1";
@@ -52,7 +53,7 @@ export const registrationSchema = z.object({
   organization: z.string().trim().min(2, "Enter your university or organisation.").max(160),
   roleOrCourse: z.string().trim().min(2, "Enter your course, degree, or current role.").max(160),
   graduationYear: z.number().int().min(1950).max(2040).nullable(),
-  country: z.string().trim().min(2, "Enter your country.").max(100),
+  country: z.literal(REGISTRATION_COUNTRY, { error: "Registration is for the United Kingdom only." }),
   city: z.string().trim().min(2, "Enter your city.").max(100),
   githubPortfolioUrl: safeUrl("GitHub or portfolio link"),
   linkedinUrl: safeUrl("LinkedIn link", true),

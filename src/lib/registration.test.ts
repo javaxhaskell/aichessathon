@@ -76,6 +76,11 @@ describe("registrationSchema", () => {
     expect(parsed.success).toBe(false);
   });
 
+  it("rejects countries outside the United Kingdom", () => {
+    const parsed = registrationSchema.safeParse({ ...base, country: "France" });
+    expect(parsed.success).toBe(false);
+  });
+
   it("rejects non-web URL schemes and missing confirmations", () => {
     const parsed = registrationSchema.safeParse({
       ...base,

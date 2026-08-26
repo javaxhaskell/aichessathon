@@ -37,8 +37,8 @@ export function HowItWorks() {
       <ol className="how-steps" data-reveal>
         {steps.map((step) => (
           <li className="how-step" key={step.index}>
+            <p className="how-label" id={`format-step-${step.index}`}>{step.label}</p>
             <div className="how-rail">
-              <p className="how-label" id={`format-step-${step.index}`}>{step.label}</p>
               <span className="how-marker" aria-hidden="true" />
             </div>
             <article className="how-body" aria-labelledby={`format-step-${step.index}`}>

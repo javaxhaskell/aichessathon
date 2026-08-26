@@ -31,6 +31,7 @@ export default function Home() {
             <dl className="event-facts">
               <div><dt>Qualification</dt><dd><time dateTime="2026-09-07">7</time>–<time dateTime="2026-09-11">11 September 2026</time> · Online</dd></div>
               <div><dt>Final</dt><dd><time dateTime="2026-09-12">{FINAL_DATE}</time> · Encode Club, London</dd></div>
+              <div><dt>Eligibility</dt><dd>United Kingdom</dd></div>
             </dl>
           </div>
           <TournamentStage />

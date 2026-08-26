@@ -7,7 +7,7 @@ import { cloneElement, FormEvent, type ReactElement, useRef, useState } from "re
 
 import { SponsorLockup } from "@/components/brand";
 import { FINAL_DATE, QUALIFICATION_DATES } from "@/lib/event";
-import { MAX_CV_BYTES, type StartRegistrationResponse } from "@/lib/registration";
+import { MAX_CV_BYTES, REGISTRATION_COUNTRY, type StartRegistrationResponse } from "@/lib/registration";
 
 type Teammate = { key: number; fullName: string; email: string };
 type FieldErrors = Record<string, string[] | undefined>;
@@ -194,7 +194,11 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
             <Field id="roleOrCourse" label="Course, degree, or current role" error={errorFor("roleOrCourse")}><input id="roleOrCourse" name="roleOrCourse" required maxLength={160} /></Field>
             <Field id="graduationYear" label="Graduation year" optional hint="If applicable" error={errorFor("graduationYear")}><input id="graduationYear" name="graduationYear" type="number" inputMode="numeric" min="1950" max="2040" placeholder="2027" /></Field>
             <div className="field-spacer" aria-hidden="true" />
-            <Field id="country" label="Country" error={errorFor("country")}><input id="country" name="country" autoComplete="country-name" required maxLength={100} /></Field>
+            <Field id="country" label="Country" hint="UK only" error={errorFor("country")}>
+              <select id="country" name="country" autoComplete="country-name" required defaultValue={REGISTRATION_COUNTRY}>
+                <option value={REGISTRATION_COUNTRY}>{REGISTRATION_COUNTRY}</option>
+              </select>
+            </Field>
             <Field id="city" label="City" error={errorFor("city")}><input id="city" name="city" autoComplete="address-level2" required maxLength={100} /></Field>
             <Field id="githubPortfolioUrl" label="GitHub profile or portfolio" error={errorFor("githubPortfolioUrl")} wide><input id="githubPortfolioUrl" name="githubPortfolioUrl" type="url" inputMode="url" placeholder="https://github.com/your-name" required maxLength={500} /></Field>
             <Field id="linkedinUrl" label="LinkedIn profile" optional error={errorFor("linkedinUrl")} wide><input id="linkedinUrl" name="linkedinUrl" type="url" inputMode="url" placeholder="https://linkedin.com/in/your-name" maxLength={500} /></Field>
@@ -291,6 +295,7 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
         <dl>
           <div><dt>Online phase</dt><dd>{QUALIFICATION_DATES}<br /><span>Five days · Online</span></dd></div>
           <div><dt>London final</dt><dd>{FINAL_DATE}<br /><span>Encode Club, London</span></dd></div>
+          <div><dt>Eligibility</dt><dd>United Kingdom only</dd></div>
           <div><dt>Sponsor</dt><dd><SponsorLockup className="aside-sponsor" /></dd></div>
         </dl>
         <div className="aside-note"><span aria-hidden="true">i</span><p>Your CV is optional at registration and stored privately. Top 50 by ELO from the online phase advance to the London final. Their CVs are shared with Optiver.</p></div>

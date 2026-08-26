@@ -17,7 +17,7 @@ const items: Array<{ id: string; question: string; answer: ReactNode }> = [
     id: "who",
     question: "Who can register?",
     answer:
-      "Register through the site form. You will be asked for background, organisation, links, and team status, and to confirm availability for both phases.",
+      "Registration is for the United Kingdom only. Register through the site form. You will be asked for background, organisation, links, and team status, and to confirm availability for both phases.",
   },
   {
     id: "format",

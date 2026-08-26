@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { HowItWorks } from "@/components/how-it-works";
 import { RegistrationForm } from "@/components/registration-form";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -29,9 +30,10 @@ export default function RegisterPage() {
           <h1>Put your agent in play.</h1>
           <p>
             Register for the five-day online qualification from {QUALIFICATION_DATES}
-            {" "}and the in-person London final on {FINAL_DATE}.
+            {" "}and the in-person London final on {FINAL_DATE}. Registration is for the United Kingdom only.
           </p>
         </div>
+        <HowItWorks />
         {available && supabase ? (
           <RegistrationForm supabaseKey={supabase.key} supabaseUrl={supabase.url} />
         ) : (
