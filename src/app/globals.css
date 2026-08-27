@@ -333,7 +333,7 @@ a.how-meta:hover { color: #e8eef6; border-color: #8ca5ef; }
 .field, .teammate-row label { display: flex; flex-direction: column; min-width: 0; color: #cbd3dc; font-size: 13px; }
 .field-wide { grid-column: 1 / -1; }
 .field-label { min-height: 22px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 9px; }
-.field-label small, .field-hint { color: #8995a1; font-size: 10px; font-weight: 450; text-transform: uppercase; letter-spacing: .08em; }
+.field-label small, .field-hint, .teammates-heading h3 small { color: #8995a1; font-size: 10px; font-weight: 450; text-transform: uppercase; letter-spacing: .08em; }
 .field-hint { display: block; margin: -7px 0 9px; text-transform: none; letter-spacing: 0; }
 .field input, .field textarea, .field select, .teammate-row input { width: 100%; min-height: 50px; border: 1px solid #2b3541; border-radius: 8px; padding: 0 14px; color: #f2f5f8; caret-color: var(--accent); background: #0b1016; transition: border-color .2s ease, background .2s ease; }
 .field textarea { padding-block: 13px; line-height: 1.55; resize: vertical; }
@@ -342,7 +342,7 @@ a.how-meta:hover { color: #e8eef6; border-color: #8ca5ef; }
 .field input:focus, .field textarea:focus, .field select:focus, .teammate-row input:focus { outline: none; border-color: #6f8ee8; background: #0d131a; box-shadow: 0 0 0 3px rgba(108,145,255,.1); }
 .field input::placeholder, .field textarea::placeholder { color: #7f8b97; }
 .field-error { display: block; margin: 8px 0 0; color: #ffaaa5; font-size: 12px; line-height: 1.45; }
-.radio-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0; margin: 0; border: 0; }
+.radio-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0; margin: 0; border: 0; }
 .choice-card { min-height: 110px; display: flex; align-items: flex-start; gap: 13px; padding: 20px; border: 1px solid #29333f; border-radius: 10px; color: #b9c2cc; background: #0a0f14; cursor: pointer; }
 .choice-card.selected { border-color: #607bc7; background: rgba(56,76,126,.15); }
 .choice-card input, .check-row input { flex: 0 0 auto; width: 17px; height: 17px; margin: 2px 0 0; accent-color: #7b99ee; }
@@ -351,7 +351,7 @@ a.how-meta:hover { color: #e8eef6; border-color: #8ca5ef; }
 .choice-card small { color: #74808c; font-size: 12px; line-height: 1.45; }
 .team-details { margin-top: 30px; padding: 26px; border: 1px solid #242e39; border-radius: 10px; background: #090d12; }
 .teammates-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin: 32px 0 18px; }
-.teammates-heading h3 { margin: 0 0 6px; font-size: 15px; font-weight: 560; }
+.teammates-heading h3 { display: flex; align-items: baseline; gap: 8px; margin: 0 0 6px; font-size: 15px; font-weight: 560; }
 .teammates-heading p { max-width: 500px; margin: 0; color: #8995a1; font-size: 11px; line-height: 1.5; }
 .quiet-button, .remove-button { min-height: 38px; border: 1px solid #34404e; border-radius: 7px; padding: 0 13px; color: #c8d0d9; background: #11171e; font-size: 11px; cursor: pointer; }
 .quiet-button:disabled { opacity: .4; cursor: not-allowed; }

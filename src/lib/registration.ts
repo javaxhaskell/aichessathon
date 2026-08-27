@@ -58,7 +58,7 @@ export const registrationSchema = z.object({
   city: z.string().trim().min(2, "Enter your city.").max(100),
   githubPortfolioUrl: safeUrl("GitHub or portfolio link"),
   linkedinUrl: safeUrl("LinkedIn link", true),
-  teamStatus: z.enum(["looking_for_team", "has_team"]),
+  teamStatus: z.enum(["solo", "looking_for_team", "has_team"]),
   teamName: optionalText(120),
   teammates: z.array(teammateSchema).max(8),
   availabilityOnline: z.literal(true, { error: `Confirm your availability for the online qualification, ${QUALIFICATION_DATES}.` }),
@@ -74,7 +74,6 @@ export const registrationSchema = z.object({
 }).strict().superRefine((value, context) => {
   if (value.teamStatus === "has_team") {
     if (!value.teamName) context.addIssue({ code: "custom", path: ["teamName"], message: "Enter your team name." });
-    if (value.teammates.length < 1) context.addIssue({ code: "custom", path: ["teammates"], message: "Add at least one teammate." });
   } else if (value.teamName || value.teammates.length) {
     context.addIssue({ code: "custom", path: ["teamStatus"], message: "Team details are only accepted for existing teams." });
   }

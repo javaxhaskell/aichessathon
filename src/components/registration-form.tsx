@@ -9,6 +9,7 @@ import { SponsorLockup } from "@/components/brand";
 import { FINAL_DATE, QUALIFICATION_DATES } from "@/lib/event";
 import { CV_CONSENT_TEXT, CV_SHARING_PUBLIC_COPY, MAX_CV_BYTES, REGISTRATION_COUNTRY, type StartRegistrationResponse } from "@/lib/registration";
 
+type TeamStatus = "solo" | "looking_for_team" | "has_team";
 type Teammate = { key: number; fullName: string; email: string };
 type FieldErrors = Record<string, string[] | undefined>;
 type ApiFailure = { error?: string; code?: string; fieldErrors?: FieldErrors };
@@ -43,8 +44,8 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
   const errorRef = useRef<HTMLDivElement>(null);
   const idempotencyKey = useRef("");
   const teammateKey = useRef(1);
-  const [teamStatus, setTeamStatus] = useState<"looking_for_team" | "has_team">("looking_for_team");
-  const [teammates, setTeammates] = useState<Teammate[]>([{ key: 0, fullName: "", email: "" }]);
+  const [teamStatus, setTeamStatus] = useState<TeamStatus>("solo");
+  const [teammates, setTeammates] = useState<Teammate[]>([]);
   const [cv, setCv] = useState<File | null>(null);
   const [cvConsent, setCvConsent] = useState(false);
   const [accessibilityText, setAccessibilityText] = useState("");
@@ -113,7 +114,11 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
       linkedinUrl: String(form.get("linkedinUrl") || ""),
       teamStatus,
       teamName: teamStatus === "has_team" ? String(form.get("teamName") || "") : null,
-      teammates: teamStatus === "has_team" ? teammates.map(({ fullName, email }) => ({ fullName, email })) : [],
+      teammates: teamStatus === "has_team"
+        ? teammates
+            .map(({ fullName, email }) => ({ fullName: fullName.trim(), email: email.trim() }))
+            .filter((teammate) => teammate.fullName || teammate.email)
+        : [],
       availabilityOnline: form.get("availabilityOnline") === "on",
       availabilityLondon: form.get("availabilityLondon") === "on",
       rulesAccepted: form.get("rulesAccepted") === "on",
@@ -207,29 +212,33 @@ export function RegistrationForm({ supabaseUrl, supabaseKey }: { supabaseUrl: st
         </section>
 
         <section className="form-section" aria-labelledby="team-heading">
-          <div className="form-section-heading"><span>02</span><div><h2 id="team-heading">Team</h2><p>You can apply with a team or ask to be matched with one.</p></div></div>
+          <div className="form-section-heading"><span>02</span><div><h2 id="team-heading">Team</h2><p>You can register solo, with a team, or ask to be matched with one.</p></div></div>
           <fieldset className="radio-group" id="teamStatus" aria-invalid={Boolean(errorFor("teamStatus"))}>
             <legend className="sr-only">Team status</legend>
+            <label className={`choice-card${teamStatus === "solo" ? " selected" : ""}`}>
+              <input type="radio" name="teamStatus" value="solo" checked={teamStatus === "solo"} onChange={() => setTeamStatus("solo")} />
+              <span><strong>I am registering solo</strong><small>Compete as an individual. No team name or teammates are required.</small></span>
+            </label>
             <label className={`choice-card${teamStatus === "looking_for_team" ? " selected" : ""}`}>
               <input type="radio" name="teamStatus" value="looking_for_team" checked={teamStatus === "looking_for_team"} onChange={() => setTeamStatus("looking_for_team")} />
-              <span><strong>I am looking for a team</strong><small>We will use your details to support team formation.</small></span>
+              <span><strong>I am looking for teammates</strong><small>We will use your details to support team formation.</small></span>
             </label>
             <label className={`choice-card${teamStatus === "has_team" ? " selected" : ""}`}>
               <input type="radio" name="teamStatus" value="has_team" checked={teamStatus === "has_team"} onChange={() => setTeamStatus("has_team")} />
-              <span><strong>I already have a team</strong><small>Add your team name and current teammates.</small></span>
+              <span><strong>I already have a team</strong><small>Add your team name. Listing teammates is optional.</small></span>
             </label>
           </fieldset>
           {teamStatus === "has_team" ? (
             <div className="team-details">
               <Field id="teamName" label="Team name" error={errorFor("teamName")}><input id="teamName" name="teamName" required maxLength={120} /></Field>
-              <div className="teammates-heading"><div><h3>Teammates</h3><p>Listing a teammate does not register them. We use these details only to identify your team.</p></div><button className="quiet-button" type="button" onClick={addTeammate} disabled={teammates.length >= 8}>Add teammate</button></div>
+              <div className="teammates-heading"><div><h3>Teammates <small>Optional</small></h3><p>Listing a teammate does not register them. We use these details only to identify your team.</p></div><button className="quiet-button" type="button" onClick={addTeammate} disabled={teammates.length >= 8}>Add teammate</button></div>
               {errorFor("teammates") ? <p className="field-error" id="teammates-error">{errorFor("teammates")}</p> : null}
               <div className="teammate-list" id="teammates" aria-describedby={errorFor("teammates") ? "teammates-error" : undefined}>
                 {teammates.map((teammate, index) => (
                   <div className="teammate-row" key={teammate.key}>
                     <label><span>Teammate {index + 1} name</span><input required value={teammate.fullName} onChange={(event) => updateTeammate(teammate.key, "fullName", event.target.value)} maxLength={120} /></label>
                     <label><span>Teammate {index + 1} email</span><input required type="email" value={teammate.email} onChange={(event) => updateTeammate(teammate.key, "email", event.target.value)} maxLength={254} /></label>
-                    {teammates.length > 1 ? <button className="remove-button" type="button" onClick={() => removeTeammate(teammate.key)} aria-label={`Remove teammate ${index + 1}`}>Remove</button> : null}
+                    <button className="remove-button" type="button" onClick={() => removeTeammate(teammate.key)} aria-label={`Remove teammate ${index + 1}`}>Remove</button>
                   </div>
                 ))}
               </div>

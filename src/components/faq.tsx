@@ -28,7 +28,7 @@ const items: Array<{ id: string; question: string; answer: ReactNode }> = [
     id: "team",
     question: "Can I enter with a team?",
     answer:
-      "Yes. Register with an existing team or ask to be matched with one. Listing a teammate does not register them.",
+      "Yes. Register solo, with an existing team, or ask to be matched with one. Teammates are optional. Listing a teammate does not register them.",
   },
   {
     id: "cost",

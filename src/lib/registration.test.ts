@@ -22,7 +22,7 @@ const base = {
   city: "London",
   githubPortfolioUrl: "https://github.com/ada",
   linkedinUrl: "",
-  teamStatus: "looking_for_team" as const,
+  teamStatus: "solo" as const,
   teamName: null,
   teammates: [],
   availabilityOnline: true,
@@ -45,13 +45,23 @@ describe("registrationSchema", () => {
     expect(parsed.accessibilityDietary).toBeNull();
   });
 
-  it("requires team details when the applicant already has a team", () => {
+  it("requires a team name when the applicant already has a team", () => {
     const parsed = registrationSchema.safeParse({ ...base, teamStatus: "has_team", teamName: "", teammates: [] });
     expect(parsed.success).toBe(false);
     if (!parsed.success) expect(parsed.error.flatten().fieldErrors.teamName).toBeDefined();
   });
 
-  it("accepts an existing team with teammate details", () => {
+  it("accepts an existing team with a name and no listed teammates", () => {
+    const parsed = registrationSchema.safeParse({
+      ...base,
+      teamStatus: "has_team",
+      teamName: "Deep Rooks",
+      teammates: [],
+    });
+    expect(parsed.success).toBe(true);
+  });
+
+  it("accepts an existing team with optional teammate details", () => {
     const parsed = registrationSchema.safeParse({
       ...base,
       teamStatus: "has_team",
@@ -59,6 +69,26 @@ describe("registrationSchema", () => {
       teammates: [{ fullName: "Grace Hopper", email: "grace@example.com" }],
     });
     expect(parsed.success).toBe(true);
+  });
+
+  it("accepts looking for teammates without naming people", () => {
+    const parsed = registrationSchema.safeParse({
+      ...base,
+      teamStatus: "looking_for_team",
+      teamName: null,
+      teammates: [],
+    });
+    expect(parsed.success).toBe(true);
+  });
+
+  it("rejects team details on a solo registration", () => {
+    const parsed = registrationSchema.safeParse({
+      ...base,
+      teamStatus: "solo",
+      teamName: "Lone King",
+      teammates: [{ fullName: "Grace Hopper", email: "grace@example.com" }],
+    });
+    expect(parsed.success).toBe(false);
   });
 
   it("treats the CV-sharing-interest checkbox as optional and unchecked by default", () => {
