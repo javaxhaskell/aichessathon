@@ -411,6 +411,116 @@ function CodeRipple({
   );
 }
 
+const ZIP_PREVIEW = [
+  { name: "agent.py", kind: "file" as const },
+  { name: "strategy.py", kind: "file" as const },
+  { name: "evaluation.py", kind: "file" as const },
+  { name: "requirements.txt", kind: "file" as const },
+  { name: "config.json", kind: "file" as const },
+  { name: "model", kind: "folder" as const },
+  { name: "weights.pt", kind: "file" as const, nested: true },
+];
+
+function FileGlyph() {
+  return (
+    <svg aria-hidden="true" className="zip-glyph zip-file" viewBox="0 0 16 16">
+      <path d="M4.2 1.6h5.1L12 4.4v9.8H4.2V1.6z" />
+      <path d="M9.3 1.6v2.9H12" />
+    </svg>
+  );
+}
+
+function FolderGlyph() {
+  return (
+    <svg aria-hidden="true" className="zip-glyph zip-folder" viewBox="0 0 16 16">
+      <path d="M1.7 4.6c0-.7.5-1.2 1.1-1.2h3.2l.9 1.2h6.3c.6 0 1.1.5 1.1 1.2v6.6c0 .7-.5 1.2-1.1 1.2H2.8c-.6 0-1.1-.5-1.1-1.2V4.6z" />
+    </svg>
+  );
+}
+
+function AgentZipTrigger() {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const pointerFocus = useRef(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointer = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div
+      className={`pipeline-zip${open ? " is-open" : ""}`}
+      ref={rootRef}
+      onPointerEnter={(event) => {
+        if (event.pointerType === "mouse") setOpen(true);
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType === "mouse") setOpen(false);
+      }}
+    >
+      <button
+        type="button"
+        className="pipeline-file"
+        aria-expanded={open}
+        aria-controls="pipeline-zip-preview"
+        aria-label="Example agent.zip contents"
+        onPointerDown={() => {
+          pointerFocus.current = true;
+        }}
+        onFocus={() => {
+          if (pointerFocus.current) {
+            pointerFocus.current = false;
+            return;
+          }
+          setOpen(true);
+        }}
+        onClick={(event) => {
+          const pointerType = "pointerType" in event.nativeEvent
+            ? (event.nativeEvent as PointerEvent).pointerType
+            : "";
+          if (pointerType === "mouse") return;
+          setOpen((current) => !current);
+        }}
+      >
+        agent.zip
+      </button>
+      <div
+        className="pipeline-zip-preview"
+        id="pipeline-zip-preview"
+        role="tooltip"
+      >
+        <div className="zip-window-title">
+          <FolderGlyph />
+          <span>agent.zip</span>
+        </div>
+        <ul className="zip-list">
+          {ZIP_PREVIEW.map((entry) => (
+            <li
+              className={`zip-row${entry.kind === "folder" ? " is-folder" : ""}${entry.nested ? " is-nested" : ""}`}
+              key={entry.name}
+            >
+              {entry.kind === "folder" ? <FolderGlyph /> : <FileGlyph />}
+              <span>{entry.kind === "folder" ? `${entry.name}/` : entry.name}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 function MiniMatch({
   frameIndex,
   reducedMotion,
@@ -484,9 +594,9 @@ export function AgentPipeline() {
       </li>
       <li className="pipeline-step pipeline-deploy">
         <div className="pipeline-body">
-          <div className="pipeline-path" aria-hidden="true">
-            <span className="pipeline-file">agent.py</span>
-            <span className="pipeline-track">
+          <div className="pipeline-path">
+            <AgentZipTrigger />
+            <span className="pipeline-track" aria-hidden="true">
               <span className="pipeline-shaft">
                 <i className="pipeline-packet" />
               </span>

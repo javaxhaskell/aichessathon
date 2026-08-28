@@ -12,7 +12,7 @@ const steps = [
   {
     label: "Qualify",
     index: "02",
-    copy: `Five days of agent matches, ${QUALIFICATION_DATES}. Ranking is by ELO. Top 50 from the online phase advance to the London final.`,
+    copy: `Five-day online tournament of agent matches, ${QUALIFICATION_DATES}. Ranking is by ELO. Top 50 from the online phase advance to the London final.`,
     extra: <p className="how-meta">Online</p>,
   },
   {

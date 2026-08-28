@@ -63,8 +63,123 @@
   text-transform: uppercase;
 }
 
-.pipeline-file { color: #d5dcd6; }
+.pipeline-file {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #d5dcd6;
+  background: none;
+  cursor: pointer;
+}
+
+.pipeline-file:hover,
+.pipeline-file:focus-visible {
+  color: #f3f6f2;
+}
+
 .pipeline-host { color: #71829a; }
+
+.pipeline-zip {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.pipeline-zip-preview {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  z-index: 20;
+  width: 188px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 10px;
+  background: rgba(14, 18, 24, .92);
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, .48),
+    0 1px 0 rgba(255, 255, 255, .04) inset;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.pipeline-zip-preview::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 12px;
+}
+
+.zip-window-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, .06);
+  color: #d7dde4;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 520;
+  letter-spacing: -.01em;
+}
+
+.zip-list {
+  margin: 0;
+  padding: 4px 0 6px;
+  list-style: none;
+}
+
+.zip-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 22px;
+  padding: 0 10px;
+  color: #c4ccd4;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.zip-row.is-folder { color: #d5dbe2; }
+.zip-row.is-nested { padding-left: 28px; }
+
+.zip-glyph {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+}
+
+.zip-file {
+  fill: none;
+  stroke: #7d8793;
+  stroke-linejoin: round;
+  stroke-width: 1.15;
+}
+
+.zip-folder {
+  fill: #8b93a0;
+}
+
+.pipeline-zip.is-open .pipeline-zip-preview {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pipeline-zip-preview {
+    transition: opacity .15s ease, visibility .15s ease;
+  }
+}
 
 .pipeline-track {
   display: flex;
